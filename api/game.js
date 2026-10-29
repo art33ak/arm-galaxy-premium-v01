@@ -85,6 +85,8 @@ function freshPlayer(tgUser) {
     dailyClaimDate: "",
     dailyStreak: 0,
     stakedArm: 0,
+    isVip: false,
+    isBlocked: false,
     createdAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp()
   };
@@ -165,6 +167,9 @@ export default async function handler(req, res) {
     if (req.method !== "GET" && req.method !== "POST") return json(res, 405, { ok: false, error: "Method not allowed." });
     const context = await getContext(req, body);
     const { firestore, playerRef, tgUser, player } = context;
+    if (player.isBlocked && !context.isAdmin) {
+      return json(res, 403, { ok: false, error: "This game account is restricted. Contact ARM GALAXY support." });
+    }
     const dateKey = new Date().toISOString().slice(0, 10);
 
     if (req.method === "GET" && action === "state") {
@@ -242,10 +247,41 @@ export default async function handler(req, res) {
       const [playersSnap, tasksSnap, claimsSnap] = await Promise.all([
         firestore.collection("players").get(), firestore.collection("tasks").get(), firestore.collection("taskClaims").get()
       ]);
-      const players = playersSnap.docs.map((doc) => ({ ...publicPlayer(normalizePlayer(doc.data(), { id: doc.id })), telegramId: doc.id })).sort((a, b) => Number(b.gamePoints) - Number(a.gamePoints)).slice(0, 30);
+      const players = playersSnap.docs.map((doc) => {
+        const playerData = normalizePlayer(doc.data(), { id: doc.id });
+        return { ...publicPlayer(playerData), telegramId: doc.id, isVip: Boolean(playerData.isVip), isBlocked: Boolean(playerData.isBlocked) };
+      }).sort((a, b) => Number(b.gamePoints) - Number(a.gamePoints));
       const claims = claimsSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() })).filter((claim) => claim.status === "pending").slice(0, 40);
       const tasks = tasksSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() })).sort((a, b) => Number(b.createdAtMs || 0) - Number(a.createdAtMs || 0));
       return json(res, 200, { ok: true, players, tasks, claims, totalPlayers: playersSnap.size, totalTasks: tasksSnap.size });
+    }
+
+    if (req.method === "POST" && action === "adminUpdatePlayer") {
+      if (!(await ensureAdmin(context, res))) return;
+      const targetId = String(body.telegramId || "").trim();
+      const gamePoints = Number(body.gamePoints);
+      const xp = Number(body.xp);
+      const level = Number(body.level);
+      const isVip = Boolean(body.isVip);
+      const isBlocked = Boolean(body.isBlocked);
+      const reason = String(body.reason || "").trim().slice(0, 240);
+      if (!/^\d{4,20}$/.test(targetId)) return json(res, 400, { ok: false, error: "Enter a valid player Telegram ID." });
+      if (!reason) return json(res, 400, { ok: false, error: "A reason is required for player account changes." });
+      if (![gamePoints, xp, level].every(Number.isFinite) || gamePoints < 0 || gamePoints > 1_000_000_000_000 || xp < 0 || xp > 1_000_000_000_000 || !Number.isInteger(level) || level < 1 || level > 999) {
+        return json(res, 400, { ok: false, error: "GP and XP must be non-negative; level must be between 1 and 999." });
+      }
+      const targetRef = firestore.collection("players").doc(targetId);
+      const change = await firestore.runTransaction(async (tx) => {
+        const snap = await tx.get(targetRef);
+        if (!snap.exists) throw new Error("PLAYER_NOT_FOUND");
+        const current = normalizePlayer(snap.data(), { id: targetId });
+        const before = { gamePoints: current.gamePoints, xp: current.xp, level: current.level, isVip: Boolean(current.isVip), isBlocked: Boolean(current.isBlocked) };
+        const next = { ...current, gamePoints: Math.floor(gamePoints), xp: Math.floor(xp), level, energyCap: Math.min(250, 100 + (level - 1) * 10), isVip, isBlocked, updatedAt: FieldValue.serverTimestamp() };
+        tx.set(targetRef, next, { merge: true });
+        return { before, after: { gamePoints: next.gamePoints, xp: next.xp, level: next.level, isVip: next.isVip, isBlocked: next.isBlocked }, player: { ...publicPlayer(next), isVip, isBlocked } };
+      });
+      await firestore.collection("adminLogs").add({ adminTelegramId: String(tgUser.id), action: "player_update", targetTelegramId: targetId, reason, before: change.before, after: change.after, createdAt: FieldValue.serverTimestamp() });
+      return json(res, 200, { ok: true, message: "Player account updated.", player: change.player });
     }
 
     if (req.method === "POST" && action === "adminCreateTask") {

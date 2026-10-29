@@ -1,4 +1,4 @@
-# ARM GALAXY — Premium Dark (starter v0.1)
+# ARM GALAXY — Premium Dark (starter v0.2)
 
 A mobile-first Telegram Mini App foundation using a clean black / gold design, Armenian-English-Russian interface, Vite, Vercel Functions, Firebase Admin, Telegram Web App authentication, and TON Connect UI.
 
@@ -20,7 +20,7 @@ npm.cmd run dev
 
 Do not delete or overwrite your existing ARM Galaxy or ARM Universe 3D folders. This starter is intentionally separate.
 
-## 2. Included in this checkpoint
+## 2. Included in this checkpoint (v0.2)
 
 - Premium black/gold responsive UI, with a supplied ARM coin image.
 - Armenian 🇦🇲, English 🇬🇧, Russian 🇷🇺 language selector.
@@ -29,7 +29,8 @@ Do not delete or overwrite your existing ARM Galaxy or ARM Universe 3D folders. 
 - Server endpoint that validates Telegram Web App `initData` before reading/changing player data.
 - Server-side daily reward and tap transactions in Firestore.
 - Admin endpoint guarded by a server-side Telegram ID allowlist.
-- Admin task creation, task-submission review, player bonus, and task active/inactive controls.
+- Admin entry point with a locked state for non-admin/demo sessions; actual controls remain hidden behind server-side Telegram ID verification.
+- Admin task creation, task-submission review, player bonus, task active/inactive controls, and an all-player directory with GP/XP/level/VIP/block status edits plus audit logging. This directory loads from Firebase only for an authorized admin.
 - TON Connect wallet UI entry point and a dynamic TON Connect manifest endpoint.
 - Firestore rules that block direct client reads/writes; trusted server functions use Firebase Admin.
 
@@ -78,16 +79,18 @@ Never put service-account keys, bot tokens, admin IDs, or any secret in a `VITE_
 
 ## 7. Product documentation and owner controls
 
-- `WHITEPAPER_HY.md` — Armenian whitepaper draft describing the game world, GP vs real ARM token, progression, planned modules, wallet and staking safety, and release roadmap.
+- `WHITEPAPER_HY.md` — Armenian whitepaper draft in the repository.
+- `/whitepaper.html` — formatted public Whitepaper page linked from the game header and sidebar.
+- `/WHITEPAPER_HY.md` — downloadable Markdown source of the Whitepaper.
 - `ADMIN_PANEL_SPEC.md` — full owner-only admin specification, including all-player management, moderation, balances, VIP, tasks, paid offers, worlds, economy settings, and audit/security rules.
-- The admin feature set in `ADMIN_PANEL_SPEC.md` is a target specification. The current starter implements only a subset; do not describe the Admin Panel as complete until the remaining items and security tests are finished.
+- The v0.2 admin UI/API includes task creation/activation, claim review, bonus grants, and all-player edits for GP, XP, level, VIP and blocked status. Larger items in the specification—pagination, GP ledger, paid-payment verification, world/economy editors, analytics and exports—remain future work. Do not describe the system as production-complete until these and the security tests are finished.
 - The owner can manage game accounts and internal Galaxy Points, but cannot control real ARM held in a player's external wallet or change blockchain balances.
 
 ## 8. Next implementation milestones
 
-1. Add the new project to GitHub and deploy to a separate Vercel project.
-2. Configure Firebase and Telegram server variables, then test authentication inside Telegram.
-3. Connect the official ARM Jetton buy URLs and test TonConnect on HTTPS.
-4. Finish server-validated shop/world/miner purchase transactions.
-5. Add paid-task transaction verification, referral attribution, and a proper mini-game reward backend.
+1. Push v0.2 changes to the private GitHub repository and let the separate Vercel project redeploy.
+2. Configure Firebase and Telegram server variables, including the owner Telegram ID in `ADMIN_TELEGRAM_IDS`, then test authentication inside Telegram.
+3. Test the Whitepaper route and the locked Admin Panel screen in a normal browser.
+4. Connect the official ARM Jetton buy URLs and test TonConnect on HTTPS.
+5. Finish server-validated shop/world/miner purchase transactions and paid-task verification.
 6. Test security rules, admin-only access, edge cases, and mobile Telegram behaviour before launch.

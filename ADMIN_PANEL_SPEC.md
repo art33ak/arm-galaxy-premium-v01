@@ -17,7 +17,7 @@
 ## 2. Dashboard navigation
 
 1. **Overview:** total players, active today, new players, pending task claims, active tasks, paid-task statuses, GP issued/removed, VIP users, abuse flags and recent admin actions.
-2. **Players:** searchable, filterable, paginated directory of every player (not just the top 30).
+2. **Players:** searchable directory of all registered players is implemented in v0.2; pagination, advanced filters and full player-profile history remain planned.
 3. **Tasks:** create/edit/archive tasks; free, daily, social and community tasks; task links, eligibility, dates, rewards, quotas and review rules.
 4. **Paid tasks / offers:** configure paid-access offers separately from sponsor-funded reward tasks; display price and asset clearly; track payment-verification status; do not grant access based on an unverified client callback.
 5. **Claims / submissions:** review evidence; approve/reject with a reason; prevent duplicate claims; keep a full decision history.
@@ -42,6 +42,8 @@ The player directory must support server-side pagination, search by Telegram ID/
 Each player profile should include only necessary information: Telegram ID, username/display name, registration and last activity, GP, XP, level, energy, streak, referral attribution, task claims, VIP status/history, owned worlds/items, verified purchases, and connected public wallet address if relevant. Do not collect unrelated private information.
 
 ### Owner actions
+
+**Implemented in v0.2:** list all registered Firestore player records; search locally by player text/Telegram ID; set GP, XP, level, VIP and blocked state through a server-verified action; record before/after values in `adminLogs`; create and activate/deactivate tasks; grant GP bonus; approve/reject task claims. These actions still require configured Telegram and Firebase server variables and must be tested inside Telegram before use.
 
 - Open and inspect a player profile.
 - Add GP bonus with a mandatory reason and transaction-ledger entry.

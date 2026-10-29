@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="hy">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#090b10" />
+<meta name="description" content="ARM GALAXY-ի սպիտակ գիրքը․ խաղի պատմություն, GP տնտեսություն, ARM թոքենի նախատեսվող կիրառություն և անվտանգության կանոններ։" />
+<title>ARM GALAXY · Սպիտակ գիրք</title>
+<link rel="icon" type="image/jpeg" href="/assets/arm-logo.jpg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Orbitron:wght@500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root{color-scheme:dark;--bg:#080a0f;--panel:#10131a;--line:rgba(213,176,99,.2);--gold:#e5b95c;--goldBright:#ffe5a1;--muted:#9ba3b1;--text:#f1f2f5;font-family:Manrope,system-ui,sans-serif;background:var(--bg);color:var(--text)}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% -10%,rgba(127,82,25,.23),transparent 42%),var(--bg);line-height:1.7}.top{position:sticky;top:0;z-index:5;background:rgba(8,10,15,.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}.top-inner{max-width:1100px;margin:auto;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;gap:18px}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);font-family:Orbitron,sans-serif;font-size:13px;letter-spacing:.08em}.brand img{width:42px;height:42px;object-fit:cover;border-radius:50%;border:1px solid #a77b30;box-shadow:0 0 22px #e5b95c28}.brand b{color:var(--gold)}.actions{display:flex;flex-wrap:wrap;gap:10px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:9px 14px;border:1px solid var(--line);border-radius:9px;color:var(--goldBright);background:#151820;text-decoration:none;font-size:12px;font-weight:800}.btn.primary{color:#201605;background:linear-gradient(110deg,#ffe4a0,#c68b32);border-color:#ffe5a1}.wrap{max-width:1100px;margin:34px auto 80px;padding:0 24px}.hero{padding:clamp(24px,5vw,50px);border:1px solid var(--line);border-radius:22px;background:linear-gradient(120deg,#141820eF,#0b0d13f2),url('/assets/arm-logo.jpg') right center/auto 100% no-repeat;box-shadow:0 20px 80px #0005;position:relative;overflow:hidden}.kicker{font-size:10px;font-weight:900;letter-spacing:.18em;color:var(--gold);text-transform:uppercase}.hero h1{font-family:Orbitron,sans-serif;font-size:clamp(26px,4vw,46px);line-height:1.2;margin:12px 0 15px;max-width:720px}.hero p{color:#bdc3ce;max-width:700px;margin:0}.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}.pill{padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:#0a0d12;color:var(--goldBright);font-size:10px;font-weight:800}.doc{margin-top:22px;padding:clamp(20px,4vw,42px);border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,#10131af5,#0d1016f5)}.doc h1{display:none}.doc h2{margin:34px 0 12px;padding-bottom:10px;border-bottom:1px solid var(--line);font-family:Orbitron,sans-serif;font-size:clamp(18px,2.6vw,25px);color:var(--goldBright);line-height:1.35}.doc h3{margin:24px 0 8px;font-size:16px;color:#f3d78e}.doc p,.doc li{font-size:14px;color:#c2c8d2}.doc li{margin:5px 0}.doc strong{color:#f5deb0}.doc blockquote{margin:20px 0;padding:14px 18px;border-left:3px solid var(--gold);background:#1a1a16;color:#c8c1ad;border-radius:0 10px 10px 0}.doc blockquote p{margin:0;color:#c8c1ad}.doc table{width:100%;border-collapse:collapse;display:block;overflow-x:auto;margin:16px 0}.doc th,.doc td{padding:10px 12px;border:1px solid var(--line);text-align:left;min-width:130px}.doc th{background:#19170f;color:var(--goldBright)}.doc a{color:#8fc7ff;overflow-wrap:anywhere}.doc hr{border:0;border-top:1px solid var(--line);margin:28px 0}.disclaimer{margin-top:18px;padding:14px 18px;border:1px solid #bb8b354d;border-radius:12px;background:#231a0e7a;color:#d9c6a1;font-size:12px}.footer{max-width:1100px;margin:-48px auto 35px;padding:0 24px;color:#6f7784;font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}@media(max-width:600px){.top-inner{padding:10px 13px;align-items:flex-start}.brand{font-size:10px}.brand img{width:34px;height:34px}.actions{gap:6px}.btn{padding:8px 10px;font-size:10px}.wrap{margin-top:18px;padding:0 12px}.hero{background-image:linear-gradient(120deg,#141820f2,#0b0d13f4)}.doc{padding:17px}.doc p,.doc li{font-size:12px}.doc th,.doc td{font-size:11px;padding:8px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-inner"><a class="brand" href="/"><img src="/assets/arm-logo.jpg" alt="ARM coin"/><span>ARM <b>GALAXY</b><br/><small style="font:9px Manrope,sans-serif;color:#8c94a2;letter-spacing:.03em">WHITEPAPER · v0.1</small></span></a><nav class="actions"><a class="btn" href="/WHITEPAPER_HY.md" download>Ներբեռնել MD ↧</a><a class="btn primary" href="/">↩ Վերադառնալ խաղին</a></nav></div></header>
+<main class="wrap"><section class="hero"><span class="kicker">Project documentation · 2026</span><h1>ARM GALAXY — Սպիտակ գիրք</h1><p>Խաղի պատմությունը, GP խաղային տնտեսությունը, ARM թոքենի նախատեսվող կիրառությունը, VIP համակարգը, անվտանգության սկզբունքներն ու զարգացման ճանապարհային քարտեզը՝ մեկ տեղում։</p><div class="meta"><span class="pill">Տարբերակ 0.1 · աշխատանքային նախագիծ</span><span class="pill">Telegram Mini App</span><span class="pill">Առանց խաղային միավորների դուրսբերման</span></div></section><article class="doc"><h1>ARM GALAXY — Սպիտակ գիրք (Whitepaper)</h1>
+<p><strong>Տարբերակ՝</strong> 0.1 — աշխատանքային նախագիծ<br />
+<strong>Կարգավիճակ՝</strong> Նախնական․ դեռ չի նշանակում հրապարակային առաջարկ կամ գործարկված ֆինանսական արտադրանք։<br />
+<strong>Նախագծի ձևաչափ՝</strong> Telegram Mini App / Web3 խաղ<br />
+<strong>Տեսողական ոճ՝</strong> Premium Clean Dark — սև, ոսկեգույն և կապույտ շեշտադրումներ</p>
+<blockquote>
+<p>Այս փաստաթուղթը նկարագրում է ARM GALAXY-ի նախատեսվող խաղային մեխանիկան և զարգացման ուղղությունը։ Դրանում նշված ապագա հնարավորությունները, թոքենի օգտագործման տարբերակները, պարգևները և վճարովի համակարգերը ակտիվ չեն համարվում, մինչև չիրականացվեն, չփորձարկվեն և պաշտոնապես չհայտարարվեն։ Թվերն ու տնտեսության պարամետրերը կարող են փոփոխվել։</p>
+</blockquote>
+<h2>1. Ամփոփում</h2>
+<p>ARM GALAXY-ը հայկական թեմատիկայով տիեզերական արկածային Telegram խաղ է։ Խաղացողը սկսում է NOVA-01 մոլորակից, հավաքում է խաղային Galaxy Points (GP), զարգացնում իր բազան, բացում նոր աշխարհներ, բարելավում սարքավորումները, կատարում առաջադրանքներ, մասնակցում մինի խաղերին և մրցում վարկանիշային աղյուսակում։</p>
+<p>Խաղի նպատակը երկարաժամկետ առաջընթաց ստեղծելն է՝ միավորելով պարզ tap մեխանիկան, idle/mining զարգացումը, առաջադրանքները, սոցիալական հրավերները և աշխարհների ուսումնասիրությունը։ ARM թոքենը նախատեսվում է օգտագործել որոշ խաղային գնումների համար՝ այն ձեռք բերելուց հետո արտաքին TON էկոհամակարգում։ Խաղից withdrawal չի նախատեսվում։</p>
+<h2>2. Պատմություն և աշխարհ</h2>
+<p>Գալակտիկայի հեռավոր հատվածում հայտնաբերվել է NOVA-01 անունով չուսումնասիրված մոլորակ։ Խաղացողը վայրէջք է կատարում այնտեղ՝ ստեղծելու առաջին բազան և ուսումնասիրելու հին ազդանշանը, որը կարող է կապված լինել կորած քաղաքակրթության հետ։</p>
+<p>Առաջընթացի ընթացքում բացվում են նոր աշխարհներ՝ տարբեր միջավայրերով, առաջադրանքներով, ռեսուրսներով և բազայի զարգացման պահանջներով։ Հայկական լեռների, Արարատի խորհրդանշական տեսքի և դրոշի գույների մոտիվները ձևավորում են նախագծի տեսողական ինքնությունը։</p>
+<h2>3. Խաղային հիմնական ցիկլը</h2>
+<ol>
+<li><strong>Հավաքել GP</strong>՝ TAP գործողություններով և ավարտված առաջադրանքներով։</li>
+<li><strong>Զարգացնել խաղացողին</strong>՝ կուտակել XP, բարձրացնել մակարդակը և բացել նոր հնարավորություններ։</li>
+<li><strong>Բարելավել արտադրությունը</strong>՝ զարգացնել miners-ը, բազան և ռեսուրսների հավաքումը։</li>
+<li><strong>Ուսումնասիրել գալակտիկան</strong>՝ ձեռք բերել մուտք դեպի նոր մոլորակներ և բովանդակություն։</li>
+<li><strong>Մասնակցել համայնքին</strong>՝ հրավիրել ընկերների, լրացնել առաջադրանքները և բարձրանալ վարկանիշում։</li>
+<li><strong>Օգտագործել խաղային տնտեսությունը</strong>՝ GP-ով կատարել խաղային գործողություններ, իսկ համապատասխան ապագա գնումների համար՝ ARM թոքեն։</li>
+</ol>
+<h2>4. Խաղային միավորներ և իրական ARM թոքեն</h2>
+<h3>4.1 Galaxy Points (GP)</h3>
+<ul>
+<li>GP-ն խաղի ներքին հաշվառման միավոր է։</li>
+<li>GP-ն չի հանդիսանում ARM թոքեն, բանկային գումար կամ վճարային միջոց։</li>
+<li>GP-ն դուրսբերման, կանխիկացման կամ բլոկչեյնային փոխանցման ենթակա չէ։</li>
+<li>GP-ի քանակը, XP-ն, մակարդակը և էներգիան պահվում են խաղի տվյալների բազայում և կառավարվում են սերվերի կողմից։</li>
+<li>Խաղային տնտեսության պարամետրերը կարող են փոխվել՝ խաղի հավասարակշռությունը պահպանելու համար։</li>
+</ul>
+<h3>4.2 ARM թոքեն</h3>
+<p>ARM-ը առանձին on-chain թոքեն է TON ցանցում։ Նախատեսվող կիրառությունները ներառում են որոշ խաղային իրերի, VIP կարգավիճակի կամ լրացուցիչ աշխարհների հասանելիության գնումներ։ Այդ կիրառությունները կմիանան միայն այն բանից հետո, երբ հաստատվեն թոքենի ճիշտ Jetton հասցեն, գնման պաշտոնական հղումները և սերվերի գործարքների ստուգումը։</p>
+<ul>
+<li>TON Connect-ը դրամապանակը միացնելու մեխանիզմ է․ միայն միացումը չի նշանակում, որ գնում է կատարվել։</li>
+<li>ARM-ը ձեռք բերելու հղումները պետք է տանեն հաստատված DEX էջերի, օրինակ՝ STON.fi կամ DeDust, և օգտագործեն ճիշտ ARM թոքենի հասցեն։</li>
+<li>Խաղը չի պահանջի seed phrase կամ անձնական գաղտնի բանալին։</li>
+<li>Խաղից ARM թոքենի կամ գումարի դուրսբերում չի նախատեսվում։</li>
+<li>Թոքենի գինը կարող է տատանվել, իսկ լիկվիդայնությունն ու փոխանակման հնարավորությունը երաշխավորված չեն։</li>
+<li>Խաղային մակարդակը կամ VIP կարգավիճակը կապված կլինեն ARM գնումների հետ միայն այն դեպքում, երբ այդ կանոնը հրապարակված է, միացված է և գործարքը հաստատված է բլոկչեյնում։</li>
+</ul>
+<h3>4.3 VIP և վճարովի հնարավորություններ</h3>
+<p>Օրինակային գաղափար է՝ որոշակի ARM քանակի հաստատված գնումից հետո բացել VIP կարգավիճակ կամ մոլորակ։ Ցանկացած շեմ, այդ թվում՝ 1,000,000 ARM-ի օրինակային շեմը, մնում է փոփոխվող խաղային կանոն, ոչ թե գործող խոստում։ Կանոնները պետք է հստակ ցույց տան պահանջվող ակտիվը, քանակը, հասանելիությունը և հաստատման պայմանները։</p>
+<h2>5. Մակարդակներ, էներգիա և XP</h2>
+<p>Մակարդակները բացում են նոր հնարավորություններ և ավելացնում են էներգիայի սահմանաչափը։ Տեղային նախատիպում օգտագործվում են մեկնարկային արժեքներ՝ 60 էներգիա, 100 էներգիայի բազային առավելագույն սահման, րոպեում 1 էներգիայի վերականգնում, TAP-ի համար +1 GP և +1 XP, ինչպես նաև 100 XP-ի յուրաքանչյուր փուլով մակարդակի բարձրացում։ Ամենօրյա փորձնական պարգևը նախատեսում է +50 GP և +20 XP։</p>
+<p>Սրանք փորձարկման մեկնարկային պարամետրեր են, ոչ վերջնական տնտեսություն։ Հրապարակային գործարկումից առաջ արժեքները պետք է հավասարակշռվեն և կարգավորվեն ադմին պանելի միջոցով։ Սերվերը պետք է վերահսկի էներգիան, cooldown-երը, XP-ն և GP-ն, որպեսզի հաճախորդի կոդը չկարողանա ինքնուրույն ստեղծել միավորներ։</p>
+<h2>6. Խաղի մոդուլներ</h2>
+<h3>TAP և էներգիա</h3>
+<p>Խաղացողը կատարում է TAP գործողություններ՝ ստանալով GP և XP էներգիայի սահմաններում։ Էներգիան վերականգնվում է ժամանակի ընթացքում։ Սերվերը հաստատում է յուրաքանչյուր գործողության թույլատրելի քանակը։</p>
+<h3>Mining և բարելավումներ</h3>
+<p>Miners-ը նախատեսվում են որպես ժամանակի ընթացքում խաղային ռեսուրս հավաքող սարքավորումներ։ Բարելավումները կարող են փոխել արտադրության արագությունը, հզորությունը կամ բացել նոր սարքեր։ Offline եկամուտը և դրա սահմանները պետք է հաշվարկվեն սերվերում, ոչ թե միայն բրաուզերում։</p>
+<h3>Staking</h3>
+<p>Staking բաժինը նախատեսված է ARM-ի կողպման և պայմաններին համապատասխան պարգևների հնարավորության համար։ Նախատիպի staking էկրանը միայն ցուցադրական է։ Իրական ARM staking-ը չի գործարկվի, մինչև չընտրվեն պայմանները, մշակվի և անկախ ստուգման ենթարկվի համապատասխան smart contract-ը, հաստատվեն կողպման տևողությունը, ռիսկերը, պարգևների աղբյուրը և պահանջվող գործարքները։ Ոչ մի ֆիքսված APY կամ եկամուտ չի երաշխավորվում։</p>
+<h3>Առաջադրանքներ և ամենօրյա պարգևներ</h3>
+<p>Առաջադրանքները կարող են լինել ամենօրյա, սոցիալական, համայնքային, հովանավորվող կամ վճարովի հասանելիության տիպի։ Յուրաքանչյուր առաջադրանք պետք է ունենա նկարագրություն, պահանջներ, վերջնաժամկետ, պարգև, հղում և ստուգման մեթոդ։ Վճարովի առաջադրանքի դեպքում վճարման ակտիվն ու պայմանները պետք է ցուցադրվեն նախապես։ Մինչ ավտոմատ վճարային ստուգումը պատրաստ չէ, պահանջվում է ադմինի հաստատում։</p>
+<h3>Referral</h3>
+<p>Խաղացողը կարող է հրավիրել ընկերներին և ստանալ նախապես սահմանված խաղային պարգևներ։ Հրավերների հաշվարկը պետք է կապվի Telegram-ի հաստատված նույնականացման հետ և ներառի կրկնակի հաշիվների, ինքնահրավերների ու չարաշահումների սահմանափակումներ։</p>
+<h3>Leaderboard</h3>
+<p>Վարկանիշը ցույց է տալիս խաղային առաջընթացը՝ GP, մակարդակ կամ հատուկ սեզոնային արդյունք։ Պետք է նախատեսվեն ընկերների/ընդհանուր/երկրի ֆիլտրեր, խարդախ միավորների հայտնաբերում և սեզոնների վերակայման հրապարակված կանոններ։</p>
+<h3>Mini Games</h3>
+<p>Նախատեսվող մինի խաղերն են Spin Wheel, Rocket, Coin Flip, Scratch, Puzzle, Memory և այլ կարճ խաղեր։ Պարգևները պետք է լինեն սերվերի կողմից հաշվարկվող, սահմանափակված և ստուգելի։ Խաղային պատահականությունը կամ մրցանակները չեն ներկայացվում որպես ներդրում կամ երաշխավորված շահույթ։</p>
+<h3>Galaxy, Shop և World progression</h3>
+<p>NOVA-01-ը մեկնարկային աշխարհն է։ Նոր աշխարհները, նավերը և իրերը բացվում են մակարդակով, GP-ով կամ՝ եթե միացված է և հստակ ցուցադրված՝ ARM-ի հաստատված գնումով։ Աշխարհի ձեռքբերումը պետք է գրանցվի խաղացողի հաշվին և պահպանվի մուտքից հետո։</p>
+<h2>7. Wallet և գնումներ</h2>
+<p>TON Connect-ը թույլ կտա խաղացողին միացնել TON դրամապանակը։ Դրամապանակի հասցեն օգտագործվում է ցուցադրման և գործարքի ստուգման համար։ Կայքը երբեք չպետք է հարցնի գաղտնի վերականգնման արտահայտությունը կամ անձնական բանալին։</p>
+<p>Գնումների հոսքը պետք է ունենա հետևյալ քայլերը՝ ցուցադրել ճշգրիտ ապրանքը և գինը, բացել հաստատված DEX/դրամապանակ գործողությունը, ստուգել ճիշտ թոքենը/ցանցը/ստացողը և գործարքի վերջնական կարգավիճակը, միայն դրանից հետո շնորհել խաղային առավելությունը։ Սխալ, չհաստատված կամ կրկնակի գործարքը չպետք է բացի ապրանք կամ VIP։ Խաղից withdrawal չկա։</p>
+<h2>8. Անձնական տվյալներ և անվտանգություն</h2>
+<ul>
+<li>Telegram Mini App-ի <code>initData</code>-ն ստուգվում է սերվերում։</li>
+<li>Խաղացողը կարող է դիտել միայն իր հաշվի տվյալները և հրապարակային վարկանիշը։</li>
+<li>Admin API գործողությունները հաստատվում են սերվերի կողմից՝ Telegram ID allowlist-ով։</li>
+<li>Firebase-ի client-side ուղղակի գրումները սահմանափակվում են․ խաղային վիճակի փոփոխությունները կատարվում են վստահելի սերվերային գործառույթներով։</li>
+<li>Ադմինի գործողությունները պետք է գրվեն audit log-ում՝ գործողություն, թիրախ խաղացող, փոփոխված դաշտ, պատճառ, ժամանակ և մինչև/հետո արժեքներով։</li>
+<li>Պետք է կիրառվեն rate limiting, կրկնակի հարցումների պաշտպանություն, input validation, մոնիթորինգ և տվյալների պահպանման հստակ քաղաքականություն։</li>
+<li>Wallet հասցեն կարելի է պահել միայն անհրաժեշտության դեպքում։ Մասնավոր բանալիները և seed phrase-երը երբեք չեն հավաքվում կամ պահվում։</li>
+</ul>
+<h2>9. Admin Panel և խաղացողների կառավարում</h2>
+<p>Նախագծի պարտադիր գործառույթ է սեփականատիրոջ համար նախատեսված պաշտպանված Admin Panel-ը։ Դրա ամբողջական պահանջների ցանկը նկարագրված է <code>ADMIN_PANEL_SPEC.md</code> ֆայլում։ Ադմինը պետք է կարողանա կառավարել բոլոր խաղացողների <strong>խաղային հաշիվները</strong>, բայց չի կարող փոխել բլոկչեյնում իրական ARM թոքենների սեփականությունը կամ խաղացողի դրամապանակի գաղտնի բանալիները։</p>
+<h2>10. Զարգացման փուլեր</h2>
+<ol>
+<li><strong>Foundation:</strong> կայուն UI, Telegram սերվերային նույնականացում, Firebase պահպանում և փորձարկման ռեժիմ։</li>
+<li><strong>Admin &amp; player management:</strong> ամբողջական խաղացողների ցուցակ, որոնում/ֆիլտրեր, սահմանափակումներ, GP/XP/level/VIP գործիքներ, առաջադրանքների ու պարգևների կառավարում և audit log։</li>
+<li><strong>Game economy:</strong> Mining, Shop, աշխարհների բացում, referral և մինի խաղերի սերվերային ստուգումներ։</li>
+<li><strong>TON purchases:</strong> հաստատված ARM Jetton հասցե, DEX հղումներ, on-chain գործարքների ստուգում և գնումների հաշվառում։</li>
+<li><strong>Staking:</strong> միայն պայմանների սահմանումից, պայմանագրի մշակումից և անվտանգության անկախ ստուգումից հետո։</li>
+<li><strong>Launch readiness:</strong> բեռնվածության, հակախարդախության, հեռախոսային Telegram WebView-ի, կրկնակի հարցումների, տվյալների և պահուստավորման փորձարկումներ։</li>
+</ol>
+<h2>11. Ռիսկեր և հրապարակման նշումներ</h2>
+<p>ARM GALAXY-ը խաղային նախագիծ է։ GP-ն փոխարկելի կամ դուրսբերման ենթակա ակտիվ չէ։ ARM թոքեն գնելը կարող է ռիսկային լինել, գինը և իրացվելիությունը երաշխավորված չեն։ Staking պարգևները, VIP առավելությունները և վճարովի հնարավորությունները չեն համարվում ակտիվ մինչև դրանց իրականացման և պայմանների հրապարակման պահը։ Նախքան իրական վճարումների ընդունումը պետք է հրապարակվեն գործող պայմանները, գաղտնիության քաղաքականությունը, օգտվելու կանոնները և կիրառելի իրավական պահանջներին համապատասխան տեղեկատվությունը։</p>
+<hr />
+<p><strong>Այս փաստաթղթի կարգավիճակ՝</strong> աշխատանքային նախագիծ՝ ապրանքի և մշակման պահանջները համաձայնեցնելու համար։ Հրապարակային կամ ֆինանսական հայտարարություններից առաջ այն պետք է վերանայվի և թարմացվի իրական գործառույթներին ու հաստատված պայմաններին համապատասխան։</p>
+</article><div class="disclaimer">Կարևոր հիշեցում․ այս Whitepaper-ը զարգացման աշխատանքային փաստաթուղթ է, ոչ ներդրումային առաջարկ։ Նախատեսվող գործառույթները ակտիվ չեն համարվում մինչև իրականացումն ու փորձարկումը։ GP-ն դուրսբերման ենթակա չէ, իսկ ARM-ի գինը կամ ապագա պարգևները երաշխավորված չեն։</div></main><footer class="footer"><span>© ARM GALAXY</span><span>Explore · Build · Discover</span><span>GP ≠ ARM token · No withdrawals</span></footer>
+</body></html>
