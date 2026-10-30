@@ -19,7 +19,7 @@ const dict = {
     yourMiners: 'Քո մայներները', miningPower: 'Մայնինգի հզորություն', perHour: 'միավոր/ժ', upgrade: 'Բարելավել', lockArm: 'Փակել ARM-ը և ստանալ պարգևներ', apy: 'Տարեկան տոկոսադրույք', flexible: 'Ճկուն', days30: '30 օր', days90: '90 օր', stakeArm: 'ՍԹԵՅՔԻՆԳ', stakingNotice: 'Իրական ARM թոքենների սթեյքինգը միացված չէ. այս էկրանը ցուցադրական է, և թոքեններ չեն կողպվում։',
     dailyTasks: 'Ամենօրյա', socialTasks: 'Սոցիալական', paidTasks: 'Վճարովի', allTasks: 'Բոլորը', reward: 'Պարգև', review: 'Ստուգման համար ուղարկել', pending: 'Սպասում է ստուգման', taskNotice: 'Առաջադրանքները հաստատվում են ադմինի կողմից։ Ոչ մի պարգև չի տրվում մինչև ստուգումն ավարտվի։',
     walletTitle: 'Քո ARM դրամապանակը', connectWallet: 'Միացնել TON դրամապանակը', walletConnected: 'Դրամապանակը միացված է', notConfigured: 'Կարգավորումը լրացված չէ', armAddress: 'ARM թոքենի հասցե', buyArm: 'Գնել ARM', noWithdraw: 'Խաղային միավորների դուրսբերում չկա։ Դրամապանակն օգտագործվում է ARM գնելու համար։', buySetup: 'Գնելու հղումը դեռ կարգավորված չէ։ Ավելացրու VITE_STONFI_BUY_URL կամ VITE_DEDUST_BUY_URL։',
-    gamesTitle: 'Բոնուսային մինի խաղեր', spin: 'Բախտի անիվ', scratch: 'Քարտի բացում', memory: 'Հիշողություն', play: 'Խաղալ', demoGameNotice: 'Մինի խաղի պարգևները ցուցադրական են, մինչև սերվերի կողմից վավերացումը միացվի։',
+    gamesTitle: 'Բոնուսային մինի խաղեր', spin: 'Բախտի անիվ', scratch: 'Քարտի բացում', memory: 'Հիշողություն', play: 'Խաղալ', demoGameNotice: 'Մինի խաղերը հասանելի են Telegram-ում․ արդյունքներն ու GP պարգևները ստուգում է սերվերը։', gamesInfo: 'Օրական մինչև 10 փորձ։ Խաղերի միջև սպասիր 12 վայրկյան։ GP-ն խաղային միավոր է և դուրսբերման ենթակա չէ։', gameLoading: 'Խաղը բացվում է…', gameWin: 'Հաղթանակ', gameLose: 'Այս անգամ չստացվեց', spinAction: 'Պտտել անիվը', scratchAction: 'Բացել քարտը', answerAction: 'Պատասխանել', stopRocket: 'ԿԱՆԳՆԵՑՆԵԼ ՀՐԹԻՌԸ', cancelGame: 'Փակել խաղը', rememberSequence: 'Հիշիր նշանների հերթականությունը', memoryQuestion: 'Ո՞ր նշանն էր երրորդը։', solveQuestion: 'Լուծիր օրինակը', signalQuestion: 'Գտիր տարբերվող ազդանշանը', rocketHint: 'Սեղմիր կանգնեցնելու կոճակը մինչև հրթիռի պայթելը։ Պարգևը որոշում է սերվերը։', dailyLimit: 'Օրական փորձերի սահմանաչափ՝ 10։', serverOnlyGames: 'Պարգևները տրվում են միայն սերվերի ստուգումից հետո։',
     worlds: 'Աշխարհներ', ships: 'Նավեր', boosts: 'Բոնուսներ', owned: 'Քոնն է', buy: 'Գնել', explore: 'Ուսումնասիրել', buildBase: 'Կառուցել բազա', worldNotice: 'Աշխարհներն ու իրերը ձեռք են բերվում խաղային միավորներով։ Գործարքները թոքեններ չեն դուրս բերում։',
     global: 'Ընդհանուր', country: 'Երկիր', player: 'Խաղացող', points: 'Միավորներ', rank: 'Տեղ', referrals: 'Հրավերներ', inviteText: 'Հրավիրիր ընկերներիդ և միասին ուսումնասիրեք Գալակտիկան։', copyLink: 'Պատճենել հղումը', referralsNotice: 'Հղումը կակտիվանա Telegram բոտի օգտանունը կարգավորելուց հետո։',
     adminTitle: 'Ադմինիստրատորի կառավարում', adminOnly: 'Միայն լիազորված ադմինների համար', adminStats: 'Ընդհանուր վիճակագրություն', totalPlayers: 'Խաղացողներ', totalTasks: 'Առաջադրանքներ', pendingClaims: 'Սպասվող ստուգումներ', createTask: 'Ստեղծել առաջադրանք', taskTitle: 'Վերնագիր', taskDescription: 'Նկարագրություն', taskLink: 'Հղում (HTTPS)', taskType: 'Տեսակ', normalTask: 'Սոցիալական', dailyTask: 'Ամենօրյա', paidTask: 'Վճարովի', rewardPoints: 'Պարգև (խաղային միավոր)', price: 'Գին (տեղեկատվական)', create: 'Ստեղծել', bonusTitle: 'Տալ բոնուս', telegramId: 'Խաղացողի Telegram ID', amount: 'Քանակ', sendBonus: 'Ուղարկել բոնուս', reviewClaims: 'Ստուգել առաջադրանքները', approve: 'Հաստատել', reject: 'Մերժել', playerList: 'Խաղացողների ցանկ', allPlayers: 'Բոլոր խաղացողները', searchPlayers: 'Փնտրել անունով կամ Telegram ID-ով', savePlayer: 'Պահպանել', vip: 'VIP', blocked: 'Արգելափակված', pointsBalance: 'GP մնացորդ', reason: 'Փոփոխության պատճառ', adminAccessTitle: 'Ադմինի հասանելիությունը դեռ միացված չէ', adminAccessText: 'Ադմին պանելը բացվում է միայն Telegram Mini App-ում՝ սերվերի կողմից հաստատված ադմինի համար։ Vercel-ում անհրաժեշտ են Telegram Bot Token-ը, Firebase Service Account-ը և քո Telegram ID-ն ADMIN_TELEGRAM_IDS փոփոխականում։', backToGame: 'Վերադառնալ խաղին', activate: 'Ակտիվացնել', deactivate: 'Անջատել',
@@ -31,7 +31,7 @@ const dict = {
     yourMiners: 'Your miners', miningPower: 'Mining power', perHour: 'points/h', upgrade: 'Upgrade', lockArm: 'Lock ARM and earn rewards', apy: 'Annual yield', flexible: 'Flexible', days30: '30 days', days90: '90 days', stakeArm: 'STAKE ARM', stakingNotice: 'Real ARM-token staking is not connected. This is a preview screen; no tokens are locked.',
     dailyTasks: 'Daily', socialTasks: 'Social', paidTasks: 'Paid', allTasks: 'All tasks', reward: 'Reward', review: 'Submit for review', pending: 'Pending review', taskNotice: 'Tasks are approved by an admin. Rewards are not issued until review is completed.',
     walletTitle: 'Your ARM wallet', connectWallet: 'Connect TON Wallet', walletConnected: 'Wallet connected', notConfigured: 'Not configured', armAddress: 'ARM token address', buyArm: 'Buy ARM', noWithdraw: 'In-game points cannot be withdrawn. The wallet is for buying ARM only.', buySetup: 'Purchase link is not configured yet. Add VITE_STONFI_BUY_URL or VITE_DEDUST_BUY_URL.',
-    gamesTitle: 'Bonus mini games', spin: 'Lucky wheel', scratch: 'Scratch card', memory: 'Memory', play: 'Play', demoGameNotice: 'Mini-game rewards are illustrative until server-side validation is enabled.',
+    gamesTitle: 'Bonus mini games', spin: 'Lucky wheel', scratch: 'Scratch card', memory: 'Memory', play: 'Play', demoGameNotice: 'Mini-games are available in Telegram. The server validates every result and GP reward.', gamesInfo: 'Up to 10 attempts per day. Wait 12 seconds between games. GP is in-game only and cannot be withdrawn.', gameLoading: 'Opening game…', gameWin: 'Victory', gameLose: 'Not this time', spinAction: 'Spin the wheel', scratchAction: 'Reveal card', answerAction: 'Submit answer', stopRocket: 'STOP ROCKET', cancelGame: 'Close game', rememberSequence: 'Remember the signal sequence', memoryQuestion: 'Which symbol was third?', solveQuestion: 'Solve the equation', signalQuestion: 'Find the odd signal', rocketHint: 'Press stop before the rocket crashes. The server decides the reward.', dailyLimit: 'Daily attempt limit: 10.', serverOnlyGames: 'Rewards are issued only after server validation.',
     worlds: 'Worlds', ships: 'Ships', boosts: 'Boosts', owned: 'Owned', buy: 'Buy', explore: 'Explore', buildBase: 'Build base', worldNotice: 'Worlds and items are purchased with in-game points. Game points cannot be withdrawn as tokens.',
     global: 'Global', country: 'Country', player: 'Player', points: 'Points', rank: 'Rank', referrals: 'Referrals', inviteText: 'Invite friends and explore the Galaxy together.', copyLink: 'Copy invite link', referralsNotice: 'The invite link becomes active after the Telegram bot username is configured.',
     adminTitle: 'Administrator controls', adminOnly: 'Authorized administrators only', adminStats: 'Overview', totalPlayers: 'Players', totalTasks: 'Tasks', pendingClaims: 'Pending reviews', createTask: 'Create task', taskTitle: 'Title', taskDescription: 'Description', taskLink: 'Link (HTTPS)', taskType: 'Type', normalTask: 'Social', dailyTask: 'Daily', paidTask: 'Paid', rewardPoints: 'Reward (game points)', price: 'Price (informational)', create: 'Create', bonusTitle: 'Send bonus', telegramId: 'Player Telegram ID', amount: 'Amount', sendBonus: 'Send bonus', reviewClaims: 'Review submissions', approve: 'Approve', reject: 'Reject', playerList: 'Players', allPlayers: 'All players', searchPlayers: 'Search by name or Telegram ID', savePlayer: 'Save changes', vip: 'VIP', blocked: 'Blocked', pointsBalance: 'GP balance', reason: 'Reason for change', adminAccessTitle: 'Admin access is not configured yet', adminAccessText: 'The Admin Panel is available only inside the Telegram Mini App for an administrator verified by the server. Configure the Telegram Bot Token, Firebase Service Account, and your Telegram ID in ADMIN_TELEGRAM_IDS in Vercel.', backToGame: 'Return to game', activate: 'Activate', deactivate: 'Deactivate',
@@ -43,7 +43,7 @@ const dict = {
     yourMiners: 'Твои майнеры', miningPower: 'Мощность майнинга', perHour: 'баллов/ч', upgrade: 'Улучшить', lockArm: 'Заблокировать ARM и получать награды', apy: 'Годовая доходность', flexible: 'Гибкий', days30: '30 дней', days90: '90 дней', stakeArm: 'СТЕЙКИНГ ARM', stakingNotice: 'Реальный стейкинг ARM пока не подключён. Это экран-превью; токены не блокируются.',
     dailyTasks: 'Ежедневные', socialTasks: 'Социальные', paidTasks: 'Платные', allTasks: 'Все задания', reward: 'Награда', review: 'Отправить на проверку', pending: 'Ожидает проверки', taskNotice: 'Задания подтверждаются администратором. Награда выдаётся только после проверки.',
     walletTitle: 'Твой ARM-кошелёк', connectWallet: 'Подключить TON Wallet', walletConnected: 'Кошелёк подключён', notConfigured: 'Не настроено', armAddress: 'Адрес токена ARM', buyArm: 'Купить ARM', noWithdraw: 'Игровые баллы нельзя вывести. Кошелёк нужен только для покупки ARM.', buySetup: 'Ссылка для покупки пока не настроена. Добавь VITE_STONFI_BUY_URL или VITE_DEDUST_BUY_URL.',
-    gamesTitle: 'Бонусные мини-игры', spin: 'Колесо удачи', scratch: 'Скретч-карта', memory: 'Память', play: 'Играть', demoGameNotice: 'Награды мини-игр демонстрационные, пока не включена серверная проверка.',
+    gamesTitle: 'Бонусные мини-игры', spin: 'Колесо удачи', scratch: 'Скретч-карта', memory: 'Память', play: 'Играть', demoGameNotice: 'Мини-игры доступны в Telegram. Сервер проверяет каждый результат и награду GP.', gamesInfo: 'До 10 попыток в день. Между играми подожди 12 секунд. GP — только игровые баллы, вывести их нельзя.', gameLoading: 'Игра запускается…', gameWin: 'Победа', gameLose: 'В этот раз не получилось', spinAction: 'Крутить колесо', scratchAction: 'Открыть карту', answerAction: 'Ответить', stopRocket: 'ОСТАНОВИТЬ РАКЕТУ', cancelGame: 'Закрыть игру', rememberSequence: 'Запомни последовательность сигналов', memoryQuestion: 'Какой символ был третьим?', solveQuestion: 'Реши пример', signalQuestion: 'Найди лишний сигнал', rocketHint: 'Нажми «Стоп» до взрыва ракеты. Награду определяет сервер.', dailyLimit: 'Лимит попыток в день: 10.', serverOnlyGames: 'Награды начисляются только после проверки сервером.',
     worlds: 'Миры', ships: 'Корабли', boosts: 'Усиления', owned: 'Куплено', buy: 'Купить', explore: 'Исследовать', buildBase: 'Построить базу', worldNotice: 'Миры и предметы покупаются за игровые баллы. Игровые баллы нельзя вывести в виде токенов.',
     global: 'Общий', country: 'Страна', player: 'Игрок', points: 'Баллы', rank: 'Место', referrals: 'Рефералы', inviteText: 'Приглашай друзей и исследуйте Галактику вместе.', copyLink: 'Скопировать ссылку', referralsNotice: 'Ссылка приглашения заработает после настройки имени Telegram-бота.',
     adminTitle: 'Управление администратора', adminOnly: 'Только для авторизованных администраторов', adminStats: 'Обзор', totalPlayers: 'Игроки', totalTasks: 'Задания', pendingClaims: 'Ожидают проверки', createTask: 'Создать задание', taskTitle: 'Название', taskDescription: 'Описание', taskLink: 'Ссылка (HTTPS)', taskType: 'Тип', normalTask: 'Социальное', dailyTask: 'Ежедневное', paidTask: 'Платное', rewardPoints: 'Награда (игровые баллы)', price: 'Цена (справочно)', create: 'Создать', bonusTitle: 'Начислить бонус', telegramId: 'Telegram ID игрока', amount: 'Количество', sendBonus: 'Начислить бонус', reviewClaims: 'Проверка заявок', approve: 'Одобрить', reject: 'Отклонить', playerList: 'Игроки', allPlayers: 'Все игроки', searchPlayers: 'Поиск по имени или Telegram ID', savePlayer: 'Сохранить изменения', vip: 'VIP', blocked: 'Заблокирован', pointsBalance: 'Баланс GP', reason: 'Причина изменения', adminAccessTitle: 'Доступ администратора ещё не настроен', adminAccessText: 'Админ-панель доступна только внутри Telegram Mini App для администратора, подтверждённого сервером. Настройте Telegram Bot Token, Firebase Service Account и свой Telegram ID в ADMIN_TELEGRAM_IDS в Vercel.', backToGame: 'Вернуться в игру', activate: 'Активировать', deactivate: 'Отключить',
@@ -85,6 +85,10 @@ let adminData = null;
 let tonConnectUI = null;
 let walletAddress = '';
 let busy = false;
+let activeMiniGame = null;
+let miniGameResult = null;
+let miniGameBusy = false;
+let miniGameSequenceTimer = null;
 let toastTimer = null;
 
 const t = (key) => dict[model.language]?.[key] || dict.en[key] || key;
@@ -189,8 +193,26 @@ function renderWallet() {
   return `<div class="screen-stack">${panelTitle('TON ECOSYSTEM', t('wallet'))}<section class="wallet-hero"><div class="wallet-hero-copy"><span class="gold-kicker">${esc(t('walletTitle'))}</span><h2>ARM <span>WALLET</span></h2><p>${esc(t('noWithdraw'))}</p><div class="wallet-status ${walletReady ? 'connected' : ''}"><span class="wallet-dot"></span>${walletReady ? `${esc(t('walletConnected'))}: ${esc(walletAddress.slice(0,6))}…${esc(walletAddress.slice(-5))}` : 'TON Connect · READY TO CONNECT'}</div><button class="gold-button" data-action="connect-wallet">${walletReady ? esc(t('walletConnected')) : esc(t('connectWallet'))} <span>↗</span></button></div><div class="wallet-coin"><img src="/assets/arm-logo.jpg" alt="ARM token"/></div></section><div class="wallet-details-grid"><article class="detail-card"><span class="detail-icon gold-text">✦</span><span>${esc(t('galaxyPoints'))}</span><strong>${fmt(model.player.gamePoints)} GP</strong><small>In-game only · no withdrawal</small></article><article class="detail-card"><span class="detail-icon blue-text">◉</span><span>${esc(t('armAddress'))}</span><strong class="address-text">${ARM_ADDRESS ? `${esc(ARM_ADDRESS.slice(0, 8))}…${esc(ARM_ADDRESS.slice(-6))}` : esc(t('notConfigured'))}</strong><small>${ARM_ADDRESS ? 'TON jetton address' : 'Configure VITE_ARM_JETTON_ADDRESS'}</small></article></div><section class="buy-card"><div class="section-heading"><div><span class="section-eyebrow">REAL ARM TOKEN</span><h2>${esc(t('buyArm'))}</h2></div><span class="status-tag">NO WITHDRAWAL</span></div><p>Connect your wallet, then use a configured DEX route to buy ARM. Connecting a wallet does not itself make a purchase.</p><div class="buy-options"><a class="dex-option ${buyConfigured && STONFI_URL ? '' : 'disabled'}" href="${STONFI_URL ? esc(STONFI_URL) : '#'}" ${STONFI_URL ? 'target="_blank" rel="noopener noreferrer"' : 'aria-disabled="true"'}><span class="dex-brand stonfi">S</span><span><b>STON.fi</b><small>${STONFI_URL ? 'Open swap route' : esc(t('notConfigured'))}</small></span><span class="arrow">↗</span></a><a class="dex-option ${buyConfigured && DEDUST_URL ? '' : 'disabled'}" href="${DEDUST_URL ? esc(DEDUST_URL) : '#'}" ${DEDUST_URL ? 'target="_blank" rel="noopener noreferrer"' : 'aria-disabled="true"'}><span class="dex-brand dedust">D</span><span><b>DeDust</b><small>${DEDUST_URL ? 'Open swap route' : esc(t('notConfigured'))}</small></span><span class="arrow">↗</span></a></div>${!buyConfigured ? `<div class="notice-card warning"><span>ⓘ</span><p>${esc(t('buySetup'))}</p></div>` : ''}</section></div>`;
 }
 function renderGames() {
-  const games = [{ id: 'wheel', title: t('spin'), icon: '◉', tag: 'LUCK' }, { id: 'scratch', title: t('scratch'), icon: '▧', tag: 'BONUS' }, { id: 'memory', title: t('memory'), icon: '▦', tag: 'BRAIN' }, { id: 'rocket', title: 'Rocket Run', icon: '➤', tag: 'ARCADE' }, { id: 'match', title: 'Gem Match', icon: '◇', tag: 'PUZZLE' }, { id: 'signal', title: 'Signal Hunt', icon: '⌁', tag: 'NOVA-01' }];
-  return `<div class="screen-stack">${panelTitle('PLAY · DISCOVER · REPEAT', t('gamesTitle'))}<div class="games-grid">${games.map((game, index) => `<article class="game-card game-${index + 1}"><div class="game-card-art"><div class="game-orbit">${game.icon}</div><span class="game-tag">${game.tag}</span></div><div class="game-card-copy"><h3>${esc(game.title)}</h3><p>${index % 2 === 0 ? 'Quick bonus challenge' : 'Test your skills in space'}</p><button class="outline-button full-width" data-action="mini-game" data-game="${game.id}">${esc(t('play'))} <span>↗</span></button></div></article>`).join('')}</div><div class="notice-card warning"><span>ⓘ</span><p>${esc(t('demoGameNotice'))}</p></div></div>`;
+  const games = [
+    { id: 'wheel', title: t('spin'), icon: '◉', tag: 'LUCK', hint: 'Server-drawn reward' },
+    { id: 'scratch', title: t('scratch'), icon: '▧', tag: 'BONUS', hint: 'Reveal a random prize' },
+    { id: 'memory', title: t('memory'), icon: '▦', tag: 'BRAIN', hint: 'Remember the sequence' },
+    { id: 'rocket', title: 'Rocket Run', icon: '➤', tag: 'ARCADE', hint: 'Stop before the crash' },
+    { id: 'match', title: 'Gem Match', icon: '◇', tag: 'PUZZLE', hint: 'Solve the crystal equation' },
+    { id: 'signal', title: 'Signal Hunt', icon: '⌁', tag: 'NOVA-01', hint: 'Find the odd signal' }
+  ];
+  let challenge = '';
+  if (activeMiniGame) {
+    const g = activeMiniGame;
+    const sequence = g.stage === 'memorize' ? `<div class="mini-sequence">${(g.sequence || []).map((symbol) => `<span>${esc(symbol)}</span>`).join('')}</div><p class="mini-game-hint">${esc(t('rememberSequence'))} · 3</p>` : '';
+    const prompt = g.gameId === 'memory' ? t('memoryQuestion') : g.gameId === 'match' ? `${t('solveQuestion')}: ${esc(g.problem)} = ?` : t('signalQuestion');
+    const answerButtons = g.kind === 'quiz' && g.stage !== 'memorize' ? `<div class="mini-game-options">${(g.options || []).map((option, index) => `<button class="mini-game-option" data-action="mini-game-answer" data-choice="${index}" ${miniGameBusy ? 'disabled' : ''}>${esc(option)}</button>`).join('')}</div>` : '';
+    const rocketMarkup = g.kind === 'rocket' ? `<div class="rocket-console"><div class="rocket-flame">🚀</div><p>${esc(t('rocketHint'))}</p><button class="gold-button full-width" data-action="mini-game-stop" ${miniGameBusy ? 'disabled' : ''}>${esc(t('stopRocket'))}</button></div>` : '';
+    challenge = `<section class="mini-game-panel"><div class="mini-game-panel-top"><div><span class="section-eyebrow">SERVER VERIFIED CHALLENGE</span><h3>${esc(g.title || 'Mini game')}</h3></div><button class="small-outline-button" data-action="mini-game-cancel">${esc(t('cancelGame'))}</button></div>${sequence}${g.kind === 'quiz' && g.stage !== 'memorize' ? `<p class="mini-game-prompt">${esc(prompt)}</p>${answerButtons}` : ''}${rocketMarkup}</section>`;
+  }
+  const result = miniGameResult ? `<div class="mini-game-result ${miniGameResult.reward > 0 ? 'won' : 'lost'}"><span>${miniGameResult.reward > 0 ? '✦' : 'ⓘ'}</span><div><strong>${esc(miniGameResult.message)}</strong><small>${miniGameResult.reward > 0 ? `+${fmt(miniGameResult.reward)} GP` : esc(t('gameLose'))}</small></div><button data-action="mini-game-result-close" aria-label="${esc(t('close'))}">×</button></div>` : '';
+  const info = isDemo ? 'Open the Mini App inside Telegram to play and receive server-verified rewards.' : `${fmt(model.player.miniGamesPlayedToday || 0)}/10 ${t('dailyLimit')} ${fmt(model.player.miniGamesRewardedToday || 0)} / 250 GP today.`;
+  return `<div class="screen-stack">${panelTitle('PLAY · DISCOVER · REPEAT', t('gamesTitle'))}${result}${challenge}<div class="games-grid">${games.map((game, index) => `<article class="game-card game-${index + 1}"><div class="game-card-art"><div class="game-orbit">${game.icon}</div><span class="game-tag">${game.tag}</span></div><div class="game-card-copy"><h3>${esc(game.title)}</h3><p>${esc(game.hint)}</p><button class="outline-button full-width" data-action="mini-game" data-game="${game.id}" ${miniGameBusy || activeMiniGame ? 'disabled' : ''}>${esc(game.id === 'wheel' ? t('spinAction') : game.id === 'scratch' ? t('scratchAction') : t('play'))} <span>↗</span></button></div></article>`).join('')}</div><div class="notice-card warning"><span>ⓘ</span><p>${esc(isDemo ? t('demoGameNotice') : t('gamesInfo'))} ${esc(t('serverOnlyGames'))}</p></div><div class="mini-game-footnote">${esc(info)}</div></div>`;
 }
 function renderGalaxy() {
   const worlds = [{ name: 'NOVA-01', title: 'Starting Planet', price: 0, status: 'owned', tone: 'nova', desc: 'Your journey begins here.' }, { name: 'TERRA-02', title: 'Frozen World', price: 100000, status: 'buy', tone: 'terra', desc: 'Ice caves and rare crystal deposits.' }, { name: 'PYRO-03', title: 'Lava World', price: 500000, status: 'buy', tone: 'pyro', desc: 'High risk, high exploration rewards.' }, { name: 'ZEUS-04', title: 'Sky World', price: 1000000, status: 'buy', tone: 'zeus', desc: 'Floating cities above the clouds.' }];
@@ -333,6 +355,77 @@ async function submitTask(taskId) {
   try { const data = await requestApi('submitTask', { taskId }); toast(data.message || t('pending')); }
   catch (error) { toast(error.message, 'error'); }
 }
+async function startMiniGame(gameId) {
+  if (isDemo) return toast(t('demoGameNotice'), 'error');
+  if (miniGameBusy || activeMiniGame) return;
+  miniGameBusy = true;
+  miniGameResult = null;
+  try {
+    if (gameId === 'wheel' || gameId === 'scratch') {
+      const data = await requestApi('miniGamePlay', { gameId });
+      if (data.player) applyServerPlayer(data.player);
+      miniGameResult = { reward: Number(data.reward || 0), message: data.reward > 0 ? `${t('gameWin')} · +${fmt(data.reward)} GP` : t('gameLose') };
+      toast(miniGameResult.message, data.reward > 0 ? 'success' : 'error');
+      render();
+      return;
+    }
+    const data = await requestApi('miniGameStart', { gameId });
+    if (data.player) applyServerPlayer(data.player);
+    activeMiniGame = { ...data.challenge, stage: gameId === 'memory' ? 'memorize' : 'question' };
+    render();
+    if (gameId === 'memory') {
+      const sessionId = activeMiniGame.sessionId;
+      clearTimeout(miniGameSequenceTimer);
+      miniGameSequenceTimer = setTimeout(() => {
+        if (activeMiniGame?.sessionId === sessionId && activeMiniGame.stage === 'memorize') {
+          activeMiniGame.stage = 'question';
+          render();
+        }
+      }, 2800);
+    }
+  } catch (error) {
+    toast(error.message, 'error');
+  } finally {
+    miniGameBusy = false;
+    render();
+  }
+}
+async function finishMiniGame(choiceIndex = undefined) {
+  if (!activeMiniGame || miniGameBusy) return;
+  miniGameBusy = true;
+  try {
+    const payload = { sessionId: activeMiniGame.sessionId };
+    if (Number.isInteger(choiceIndex)) payload.choiceIndex = choiceIndex;
+    const data = await requestApi('miniGameFinish', payload);
+    if (data.player) applyServerPlayer(data.player);
+    miniGameResult = { reward: Number(data.reward || 0), message: data.won ? `${t('gameWin')} · +${fmt(data.reward)} GP` : t('gameLose') };
+    activeMiniGame = null;
+    clearTimeout(miniGameSequenceTimer);
+    toast(miniGameResult.message, data.won ? 'success' : 'error');
+    render();
+  } catch (error) {
+    toast(error.message, 'error');
+    if (/session|ժամանակը լրացել/i.test(error.message)) {
+      activeMiniGame = null;
+      clearTimeout(miniGameSequenceTimer);
+    }
+  } finally {
+    miniGameBusy = false;
+    render();
+  }
+}
+async function cancelMiniGame() {
+  if (!activeMiniGame || miniGameBusy) return;
+  miniGameBusy = true;
+  const sessionId = activeMiniGame.sessionId;
+  try { await requestApi('miniGameCancel', { sessionId }); }
+  catch (error) { toast(error.message, 'error'); }
+  activeMiniGame = null;
+  clearTimeout(miniGameSequenceTimer);
+  miniGameBusy = false;
+  render();
+}
+
 async function connectWallet() {
   if (walletAddress) { try { await tonConnectUI?.disconnect(); walletAddress = ''; render(); } catch (error) { toast(error.message, 'error'); } return; }
   if (!window.isSecureContext) return toast('TON Connect needs a secure HTTPS page. Use a Vercel preview URL.', 'error');
@@ -413,7 +506,11 @@ root.addEventListener('click', async (event) => {
   if (action === 'submit-task') return submitTask(actionBtn.dataset.taskId);
   if (action === 'connect-wallet') return connectWallet();
   if (action === 'stake-preview') return previewOnly(t('stakingNotice'));
-  if (action === 'mini-game') return previewOnly(t('demoGameNotice'));
+  if (action === 'mini-game') return startMiniGame(actionBtn.dataset.game);
+  if (action === 'mini-game-answer') return finishMiniGame(Number(actionBtn.dataset.choice));
+  if (action === 'mini-game-stop') return finishMiniGame();
+  if (action === 'mini-game-cancel') return cancelMiniGame();
+  if (action === 'mini-game-result-close') { miniGameResult = null; render(); return; }
   if (action === 'upgrade-miner') return previewOnly('Miner upgrades will be connected to the server economy in the next development step.');
   if (action === 'buy-item') return previewOnly('Shop purchases will be validated on the server before any game points are spent.');
   if (action === 'buy-world') return previewOnly('World purchases will be validated and saved by the server in the next development step.');

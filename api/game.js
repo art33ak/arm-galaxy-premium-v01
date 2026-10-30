@@ -4,6 +4,10 @@ import { FieldValue, getFirestore } from "firebase-admin/firestore";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const DEMO_START_POINTS = 220;
+const MINI_GAME_DAILY_LIMIT = 10;
+const MINI_GAME_DAILY_REWARD_CAP = 250;
+const MINI_GAME_COOLDOWN_MS = 12_000;
+const MINI_GAME_SESSION_TTL_MS = 30_000;
 
 function json(res, status, body) {
   res.setHeader("Cache-Control", "no-store");
@@ -85,6 +89,10 @@ function freshPlayer(tgUser) {
     dailyClaimDate: "",
     dailyStreak: 0,
     stakedArm: 0,
+    miniGamesDate: "",
+    miniGamesPlayedToday: 0,
+    miniGamesRewardedToday: 0,
+    miniGamesLastPlayAtMs: 0,
     isVip: false,
     isBlocked: false,
     createdAt: FieldValue.serverTimestamp(),
@@ -121,6 +129,7 @@ async function getContext(req, body) {
 }
 
 function publicPlayer(player) {
+  const isMiniGameToday = player.miniGamesDate === new Date().toISOString().slice(0, 10);
   return {
     telegramId: player.telegramId,
     username: player.username || "",
@@ -133,7 +142,108 @@ function publicPlayer(player) {
     energyCap: player.energyCap,
     dailyClaimDate: player.dailyClaimDate || "",
     dailyStreak: player.dailyStreak || 0,
-    stakedArm: player.stakedArm || 0
+    stakedArm: player.stakedArm || 0,
+    miniGamesDate: isMiniGameToday ? player.miniGamesDate : "",
+    miniGamesPlayedToday: isMiniGameToday ? Math.max(0, Number(player.miniGamesPlayedToday || 0)) : 0,
+    miniGamesRewardedToday: isMiniGameToday ? Math.max(0, Number(player.miniGamesRewardedToday || 0)) : 0
+  };
+}
+
+
+function miniGameStats(player, dateKey) {
+  const sameDay = player.miniGamesDate === dateKey;
+  return {
+    played: sameDay ? Math.max(0, Number(player.miniGamesPlayedToday || 0)) : 0,
+    rewarded: sameDay ? Math.max(0, Number(player.miniGamesRewardedToday || 0)) : 0,
+    lastAt: sameDay ? Math.max(0, Number(player.miniGamesLastPlayAtMs || 0)) : 0
+  };
+}
+
+function assertMiniGameAvailable(stats, now) {
+  if (stats.played >= MINI_GAME_DAILY_LIMIT) throw new Error("MINIGAME_DAILY_LIMIT");
+  if (stats.rewarded >= MINI_GAME_DAILY_REWARD_CAP) throw new Error("MINIGAME_REWARD_CAP");
+  if (stats.lastAt && now - stats.lastAt < MINI_GAME_COOLDOWN_MS) throw new Error("MINIGAME_COOLDOWN");
+}
+
+function weightedReward(kind) {
+  const table = kind === "wheel"
+    ? [{ value: 0, weight: 24 }, { value: 5, weight: 35 }, { value: 10, weight: 25 }, { value: 20, weight: 13 }, { value: 50, weight: 3 }]
+    : [{ value: 0, weight: 23 }, { value: 5, weight: 34 }, { value: 10, weight: 27 }, { value: 15, weight: 13 }, { value: 25, weight: 3 }];
+  const total = table.reduce((sum, item) => sum + item.weight, 0);
+  let ticket = crypto.randomInt(0, total);
+  for (const item of table) {
+    ticket -= item.weight;
+    if (ticket < 0) return item.value;
+  }
+  return 0;
+}
+
+function shuffled(items) {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i -= 1) {
+    const j = crypto.randomInt(0, i + 1);
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+function makeMiniGameChallenge(gameId) {
+  if (gameId === "memory") {
+    const pool = ["✦", "◈", "⌁", "☼", "⬡", "◇"];
+    const sequence = Array.from({ length: 4 }, () => pool[crypto.randomInt(0, pool.length)]);
+    const answer = sequence[2];
+    const distractors = shuffled(pool.filter((symbol) => symbol !== answer)).slice(0, 3);
+    const options = shuffled([answer, ...distractors]);
+    return { kind: "quiz", title: "Memory Signal", sequence, options, correctChoice: options.indexOf(answer), reward: 10 };
+  }
+  if (gameId === "match") {
+    const a = crypto.randomInt(2, 10);
+    const b = crypto.randomInt(2, 10);
+    const answer = a + b;
+    const options = shuffled([...new Set([answer, answer + 1, Math.max(1, answer - 2), answer + 3])]);
+    return { kind: "quiz", title: "Gem Match", problem: `${a} + ${b}`, options: options.map(String), correctChoice: options.indexOf(answer), reward: 15 };
+  }
+  if (gameId === "signal") {
+    const groups = [
+      ["✦", "✧", "✦", "✦"],
+      ["●", "●", "○", "●"],
+      ["◆", "◇", "◇", "◇"],
+      ["▲", "▲", "△", "▲"]
+    ];
+    const options = shuffled(groups[crypto.randomInt(0, groups.length)]);
+    const counts = new Map();
+    for (const item of options) counts.set(item, (counts.get(item) || 0) + 1);
+    const oddSymbol = [...counts.entries()].find(([, count]) => count === 1)?.[0];
+    return { kind: "quiz", title: "Signal Hunt", options, correctChoice: options.indexOf(oddSymbol), reward: 20 };
+  }
+  if (gameId === "rocket") {
+    return { kind: "rocket", title: "Rocket Run", crashAtElapsedMs: crypto.randomInt(2200, 7001), reward: 0 };
+  }
+  throw new Error("MINIGAME_INVALID");
+}
+
+function withMiniGamePlay(player, dateKey, now, reward, { countAttempt = true } = {}) {
+  const stats = miniGameStats(player, dateKey);
+  if (countAttempt) assertMiniGameAvailable(stats, now);
+  const safeReward = Math.max(0, Math.min(Math.floor(Number(reward || 0)), MINI_GAME_DAILY_REWARD_CAP - stats.rewarded));
+  const xpGain = safeReward > 0 ? Math.min(10, Math.max(1, Math.floor(safeReward / 5))) : 0;
+  const xp = player.xp + xpGain;
+  const level = Math.floor(xp / 100) + 1;
+  const energyCap = Math.min(250, 100 + (level - 1) * 10);
+  return {
+    reward: safeReward,
+    player: {
+      ...player,
+      gamePoints: player.gamePoints + safeReward,
+      xp,
+      level,
+      energyCap,
+      miniGamesDate: dateKey,
+      miniGamesPlayedToday: stats.played + (countAttempt ? 1 : 0),
+      miniGamesRewardedToday: stats.rewarded + safeReward,
+      miniGamesLastPlayAtMs: now,
+      updatedAt: FieldValue.serverTimestamp()
+    }
   };
 }
 
@@ -224,6 +334,137 @@ export default async function handler(req, res) {
         return next;
       });
       return json(res, 200, { ok: true, message: "Daily reward claimed.", player: publicPlayer(updated) });
+    }
+
+    if (req.method === "POST" && action === "miniGamePlay") {
+      const gameId = String(body.gameId || "");
+      if (!["wheel", "scratch"].includes(gameId)) return json(res, 400, { ok: false, error: "MINIGAME_INVALID" });
+      const rolledReward = weightedReward(gameId);
+      const now = Date.now();
+      const historyRef = firestore.collection("miniGameHistory").doc(crypto.randomUUID());
+      const result = await firestore.runTransaction(async (tx) => {
+        const snap = await tx.get(playerRef);
+        const current = normalizePlayer(snap.data(), tgUser);
+        const updated = withMiniGamePlay(current, dateKey, now, rolledReward);
+        tx.set(playerRef, updated.player, { merge: true });
+        tx.create(historyRef, {
+          telegramId: String(tgUser.id), gameId, reward: updated.reward,
+          outcome: updated.reward > 0 ? "win" : "no_reward",
+          createdAt: FieldValue.serverTimestamp(), createdAtMs: now
+        });
+        return updated;
+      });
+      return json(res, 200, {
+        ok: true, gameId, reward: result.reward,
+        outcome: result.reward > 0 ? "win" : "no_reward",
+        message: result.reward > 0 ? `Շնորհավորում ենք․ +${result.reward} GP` : "Այս անգամ պարգև չընկավ։ Նորից փորձիր ավելի ուշ։",
+        player: publicPlayer(result.player)
+      });
+    }
+
+    if (req.method === "POST" && action === "miniGameStart") {
+      const gameId = String(body.gameId || "");
+      if (!["memory", "match", "signal", "rocket"].includes(gameId)) return json(res, 400, { ok: false, error: "MINIGAME_INVALID" });
+      const challenge = makeMiniGameChallenge(gameId);
+      const now = Date.now();
+      const sessionId = crypto.randomUUID();
+      const sessionRef = firestore.collection("miniGameSessions").doc(sessionId);
+      const result = await firestore.runTransaction(async (tx) => {
+        const snap = await tx.get(playerRef);
+        const current = normalizePlayer(snap.data(), tgUser);
+        const stats = miniGameStats(current, dateKey);
+        assertMiniGameAvailable(stats, now);
+        const next = {
+          ...current,
+          miniGamesDate: dateKey,
+          miniGamesPlayedToday: stats.played + 1,
+          miniGamesRewardedToday: stats.rewarded,
+          miniGamesLastPlayAtMs: now,
+          updatedAt: FieldValue.serverTimestamp()
+        };
+        tx.set(playerRef, next, { merge: true });
+        tx.create(sessionRef, {
+          telegramId: String(tgUser.id), gameId, kind: challenge.kind,
+          correctChoice: challenge.correctChoice ?? null,
+          crashAtElapsedMs: challenge.crashAtElapsedMs ?? null,
+          reward: challenge.reward || 0,
+          status: "active", createdAt: FieldValue.serverTimestamp(),
+          createdAtMs: now, expiresAtMs: now + MINI_GAME_SESSION_TTL_MS
+        });
+        return next;
+      });
+      const publicChallenge = {
+        sessionId, gameId, kind: challenge.kind, title: challenge.title,
+        prompt: challenge.prompt || "", problem: challenge.problem || "",
+        sequence: challenge.sequence || [], options: challenge.options || [],
+        minStopMs: gameId === "rocket" ? 900 : 0,
+        expiresInMs: MINI_GAME_SESSION_TTL_MS,
+        reward: challenge.reward || 0
+      };
+      return json(res, 200, { ok: true, challenge: publicChallenge, player: publicPlayer(result) });
+    }
+
+    if (req.method === "POST" && action === "miniGameFinish") {
+      const sessionId = String(body.sessionId || "");
+      if (!/^[0-9a-f-]{36}$/i.test(sessionId)) return json(res, 400, { ok: false, error: "MINIGAME_SESSION_INVALID" });
+      const sessionRef = firestore.collection("miniGameSessions").doc(sessionId);
+      const now = Date.now();
+      const result = await firestore.runTransaction(async (tx) => {
+        const [playerSnap, sessionSnap] = await Promise.all([tx.get(playerRef), tx.get(sessionRef)]);
+        if (!sessionSnap.exists) throw new Error("MINIGAME_SESSION_INVALID");
+        const session = sessionSnap.data();
+        if (session.telegramId !== String(tgUser.id)) throw new Error("MINIGAME_SESSION_INVALID");
+        if (session.status !== "active") throw new Error("MINIGAME_ALREADY_USED");
+        if (now > Number(session.expiresAtMs || 0)) {
+          tx.update(sessionRef, { status: "expired", finishedAt: FieldValue.serverTimestamp(), finishedAtMs: now });
+          return { expired: true };
+        }
+        const current = normalizePlayer(playerSnap.data(), tgUser);
+        let won = false;
+        let reward = 0;
+        if (session.gameId === "rocket") {
+          const elapsed = now - Number(session.createdAtMs || now);
+          if (elapsed < 900) throw new Error("MINIGAME_ROCKET_TOO_FAST");
+          won = elapsed < Number(session.crashAtElapsedMs || 0);
+          reward = won ? (elapsed < 3000 ? 5 : elapsed < 4500 ? 10 : 15) : 0;
+        } else {
+          const choiceIndex = Number(body.choiceIndex);
+          if (!Number.isInteger(choiceIndex) || choiceIndex < 0 || choiceIndex > 5) throw new Error("MINIGAME_CHOICE_INVALID");
+          won = choiceIndex === Number(session.correctChoice);
+          reward = won ? Math.max(0, Number(session.reward || 0)) : 0;
+        }
+        const updated = withMiniGamePlay(current, dateKey, now, reward, { countAttempt: false });
+        tx.set(playerRef, updated.player, { merge: true });
+        tx.update(sessionRef, {
+          status: "completed", outcome: won ? "win" : "loss", reward: updated.reward,
+          finishedAt: FieldValue.serverTimestamp(), finishedAtMs: now
+        });
+        tx.create(firestore.collection("miniGameHistory").doc(sessionId), {
+          telegramId: String(tgUser.id), gameId: session.gameId,
+          reward: updated.reward, outcome: won ? "win" : "loss",
+          durationMs: now - Number(session.createdAtMs || now),
+          createdAt: FieldValue.serverTimestamp(), createdAtMs: now
+        });
+        return { won, reward: updated.reward, player: updated.player };
+      });
+      if (result.expired) return json(res, 410, { ok: false, error: "MINIGAME_SESSION_EXPIRED" });
+      return json(res, 200, {
+        ok: true, won: result.won, reward: result.reward,
+        message: result.won ? `Հիանալի է․ +${result.reward} GP` : "Այս անգամ չստացվեց։ Հաջողություն հաջորդ անգամ։",
+        player: publicPlayer(result.player)
+      });
+    }
+
+    if (req.method === "POST" && action === "miniGameCancel") {
+      const sessionId = String(body.sessionId || "");
+      if (!/^[0-9a-f-]{36}$/i.test(sessionId)) return json(res, 400, { ok: false, error: "MINIGAME_SESSION_INVALID" });
+      const sessionRef = firestore.collection("miniGameSessions").doc(sessionId);
+      await firestore.runTransaction(async (tx) => {
+        const snap = await tx.get(sessionRef);
+        if (!snap.exists || snap.data().telegramId !== String(tgUser.id)) throw new Error("MINIGAME_SESSION_INVALID");
+        if (snap.data().status === "active") tx.update(sessionRef, { status: "cancelled", finishedAt: FieldValue.serverTimestamp(), finishedAtMs: Date.now() });
+      });
+      return json(res, 200, { ok: true });
     }
 
     if (req.method === "POST" && action === "submitTask") {
@@ -358,7 +599,16 @@ export default async function handler(req, res) {
       DAILY_ALREADY_CLAIMED: [409, "Today's reward has already been claimed."],
       TASK_ALREADY_SUBMITTED: [409, "You have already submitted this task."],
       CLAIM_NOT_PENDING: [409, "This claim has already been reviewed."],
-      PLAYER_NOT_FOUND: [404, "Player not found."]
+      PLAYER_NOT_FOUND: [404, "Player not found."],
+      MINIGAME_DAILY_LIMIT: [429, "Այսօրվա մինի խաղերի սահմանաչափն ավարտվել է։ Վաղը նորից փորձիր։"],
+      MINIGAME_REWARD_CAP: [429, "Այսօրվա մինի խաղերի պարգևների սահմանաչափն արդեն լրացել է։"],
+      MINIGAME_COOLDOWN: [429, "Հաջորդ խաղից առաջ մի քանի վայրկյան սպասիր։"],
+      MINIGAME_INVALID: [400, "Ընտրված մինի խաղը վավեր չէ։"],
+      MINIGAME_SESSION_INVALID: [404, "Խաղային սեսիան չի գտնվել։ Նորից սկսիր խաղը։"],
+      MINIGAME_ALREADY_USED: [409, "Այս խաղային սեսիան արդեն օգտագործվել է։"],
+      MINIGAME_SESSION_EXPIRED: [410, "Խաղի ժամանակը լրացել է։ Նորից սկսիր։"],
+      MINIGAME_CHOICE_INVALID: [400, "Ընտրությունը վավեր չէ։"],
+      MINIGAME_ROCKET_TOO_FAST: [409, "Հրթիռը դեռ չի հասցրել թռիչքի անվտանգ արագությանը։ Մի փոքր սպասիր։"]
     };
     if (known[message]) return json(res, known[message][0], { ok: false, error: known[message][1] });
     if (message.includes("Telegram authentication") || message.includes("Telegram session") || message.includes("Open ARM Galaxy") || message.includes("Telegram user")) return json(res, 401, { ok: false, error: message });

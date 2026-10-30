@@ -421,3 +421,36 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 @media(max-width:1150px){.admin-player-form{grid-template-columns:minmax(130px,1.4fr) repeat(3,minmax(65px,.6fr)) auto auto}.admin-player-form .small-gold-button{grid-column:1/-1;justify-self:end}}
 @media(max-width:900px){.whitepaper-button span{display:none}.whitepaper-button{width:34px;height:34px;padding:0;font-size:15px}.sidebar-doc-link{display:none}.admin-player-form{grid-template-columns:minmax(0,1fr) repeat(3,minmax(62px,.5fr));}.admin-check-label{padding:4px 0}.admin-player-form .small-gold-button{grid-column:1/-1;justify-self:stretch}}
 @media(max-width:620px){.admin-player-form{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.admin-player-identity{grid-column:1/-1}.admin-player-form .admin-check-label{grid-column:span 1}.admin-player-form .small-gold-button{grid-column:1/-1}.admin-locked-card h2{font-size:17px}.admin-lock-checklist{font-size:10px}}
+
+/* Server-validated mini-game challenge panel */
+.mini-game-panel { padding: 17px; border: 1px solid rgba(229,185,92,.32); border-radius: 13px; background: radial-gradient(ellipse at 50% 0%, rgba(229,185,92,.12), transparent 58%), linear-gradient(135deg, #171b25, #0d1017); box-shadow: 0 12px 35px rgba(0,0,0,.18); }
+.mini-game-panel-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 15px; }
+.mini-game-panel-top h3 { margin: 5px 0 0; font-size: 16px; }
+.mini-sequence { display: flex; justify-content: center; gap: 12px; padding: 22px 12px; border: 1px solid rgba(180,138,255,.2); border-radius: 10px; background: rgba(180,138,255,.055); }
+.mini-sequence span { display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid rgba(229,185,92,.35); border-radius: 12px; background: rgba(229,185,92,.09); color: var(--gold-bright); font-size: 26px; box-shadow: 0 0 20px rgba(229,185,92,.08); }
+.mini-game-hint, .mini-game-prompt { margin: 13px 0; color: #d8dbe2; text-align: center; font-size: 13px; font-weight: 750; }
+.mini-game-options { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 9px; }
+.mini-game-option { min-height: 53px; border: 1px solid rgba(99,184,255,.25); border-radius: 9px; background: linear-gradient(145deg,rgba(99,184,255,.1),rgba(12,16,24,.8)); color: #eaf4ff; font-size: 20px; font-weight: 850; transition: border-color .18s, transform .18s, background .18s; }
+.mini-game-option:hover:not(:disabled) { border-color: var(--gold); background: rgba(229,185,92,.12); transform: translateY(-2px); }
+.rocket-console { display: grid; justify-items: center; gap: 10px; padding: 10px; }
+.rocket-flame { font-size: 55px; filter: drop-shadow(0 0 18px rgba(99,184,255,.42)); animation: rocket-float 1s ease-in-out infinite alternate; }
+.rocket-console p { max-width: 480px; margin: 0 0 6px; color: var(--muted-2); text-align: center; font-size: 11px; line-height: 1.6; }
+.rocket-console .gold-button { max-width: 360px; }
+@keyframes rocket-float { from { transform: translateY(5px) rotate(-3deg); } to { transform: translateY(-5px) rotate(3deg); } }
+.mini-game-result { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid rgba(120,226,181,.25); border-radius: 10px; background: rgba(120,226,181,.07); }
+.mini-game-result > span { color: var(--green); font-size: 22px; }
+.mini-game-result div { display: flex; flex: 1; flex-direction: column; gap: 3px; min-width: 0; }
+.mini-game-result strong { color: #e8f8f0; font-size: 11px; }
+.mini-game-result small { color: var(--green); font-size: 10px; font-weight: 800; }
+.mini-game-result button { border: 0; background: transparent; color: var(--muted-2); font-size: 20px; }
+.mini-game-result.lost { border-color: rgba(229,185,92,.2); background: rgba(229,185,92,.055); }
+.mini-game-result.lost > span { color: var(--gold); }
+.mini-game-result.lost small { color: var(--muted-2); }
+.mini-game-footnote { color: #788292; text-align: center; font-size: 9px; line-height: 1.6; }
+@media (max-width: 600px) {
+  .mini-game-panel { padding: 12px; }
+  .mini-game-options { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .mini-sequence { gap: 7px; }
+  .mini-sequence span { width: 42px; height: 42px; }
+  .mini-game-panel-top h3 { font-size: 13px; }
+}
