@@ -68,7 +68,7 @@ const navItems = [
 ];
 
 function freshDemoState() {
-  return { player: { telegramId: '', displayName: TG?.initDataUnsafe?.user?.first_name || 'Explorer', username: TG?.initDataUnsafe?.user?.username || '', gamePoints: 220, xp: 0, level: 1, energy: 60, energyCap: 100, dailyClaimDate: '', dailyStreak: 0, stakedArm: 0 }, tasks: demoTasks, language: 'hy', screen: 'home', isDemo: true, activeWorld: 'NOVA-01' };
+  return { player: { telegramId: '', displayName: TG?.initDataUnsafe?.user?.first_name || 'Explorer', username: TG?.initDataUnsafe?.user?.username || '', gamePoints: 220, xp: 0, level: 1, energy: 60, energyCap: 100, dailyClaimDate: '', dailyStreak: 0, stakedArm: 0, ownedWorlds: ['NOVA-01'] }, tasks: demoTasks, language: 'hy', screen: 'home', isDemo: true, activeWorld: 'NOVA-01' };
 }
 let saved = null;
 try { saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); } catch { saved = null; }
@@ -85,6 +85,7 @@ let adminData = null;
 let tonConnectUI = null;
 let walletAddress = '';
 let busy = false;
+let worldPurchaseBusy = false;
 let activeMiniGame = null;
 let miniGameResult = null;
 let miniGameBusy = false;
@@ -217,8 +218,14 @@ function renderGames() {
   return `<div class="screen-stack">${panelTitle('PLAY · DISCOVER · REPEAT', t('gamesTitle'))}${result}${challenge}<div class="games-grid">${games.map((game, index) => `<article class="game-card game-${index + 1}"><div class="game-card-art"><div class="game-orbit">${game.icon}</div><span class="game-tag">${game.tag}</span></div><div class="game-card-copy"><h3>${esc(game.title)}</h3><p>${esc(game.hint)}</p><button class="outline-button full-width" data-action="mini-game" data-game="${game.id}" ${miniGameBusy || activeMiniGame ? 'disabled' : ''}>${esc(game.id === 'wheel' ? t('spinAction') : game.id === 'scratch' ? t('scratchAction') : t('play'))} <span>↗</span></button></div></article>`).join('')}</div><div class="notice-card warning"><span>ⓘ</span><p>${esc(isDemo ? t('demoGameNotice') : t('gamesInfo'))} ${esc(t('serverOnlyGames'))}</p></div><div class="mini-game-footnote">${esc(info)}</div></div>`;
 }
 function renderGalaxy() {
-  const worlds = [{ name: 'NOVA-01', title: 'Starting Planet', price: 0, status: 'owned', tone: 'nova', desc: 'Your journey begins here.' }, { name: 'TERRA-02', title: 'Frozen World', price: 100000, status: 'buy', tone: 'terra', desc: 'Ice caves and rare crystal deposits.' }, { name: 'PYRO-03', title: 'Lava World', price: 500000, status: 'buy', tone: 'pyro', desc: 'High risk, high exploration rewards.' }, { name: 'ZEUS-04', title: 'Sky World', price: 1000000, status: 'buy', tone: 'zeus', desc: 'Floating cities above the clouds.' }];
-  return `<div class="screen-stack">${panelTitle('EXPLORE NEW WORLDS', t('galaxy'), `<span class="status-tag">NOVA SECTOR</span>`)}<section class="galaxy-banner"><div class="galaxy-nebula"></div><div class="galaxy-banner-copy"><span class="gold-kicker">SECTOR 01 · ANCIENT SIGNAL</span><h2>Explore beyond<br/><span>the horizon.</span></h2><p>Build a base, find ancient signals, and unlock new worlds.</p><div class="explore-stat"><span>EXPLORATION</span><b>65%</b><div class="progress-track"><i style="width:65%"></i></div></div></div><div class="galaxy-orb"><img src="/assets/arm-logo.jpg" alt="ARM"/></div></section><div class="world-list">${worlds.map((world) => `<article class="world-row ${world.tone}"><div class="world-planet"><span>${world.tone === 'nova' ? '✦' : world.tone === 'terra' ? '❄' : world.tone === 'pyro' ? '♨' : '☁'}</span></div><div class="world-info"><span class="world-code">${world.name}</span><h3>${world.title}</h3><p>${world.desc}</p></div><div class="world-action">${world.status === 'owned' ? `<span class="owned-chip">✓ ${esc(t('owned'))}</span>` : `<strong>✦ ${fmt(world.price)} GP</strong><button class="small-gold-button" data-action="buy-world" data-world="${world.name}" data-cost="${world.price}">${esc(t('buy'))}</button>`}</div></article>`).join('')}</div><div class="notice-card"><span>ⓘ</span><p>${esc(t('worldNotice'))}</p></div></div>`;
+  const ownedWorlds = new Set(Array.isArray(model.player.ownedWorlds) ? model.player.ownedWorlds : ['NOVA-01']);
+  const worlds = [
+    { name: 'NOVA-01', title: 'Starting Planet', price: 0, tone: 'nova', desc: 'Your journey begins here.' },
+    { name: 'TERRA-02', title: 'Frozen World', price: 100000, tone: 'terra', desc: 'Ice caves and rare crystal deposits.' },
+    { name: 'PYRO-03', title: 'Lava World', price: 500000, tone: 'pyro', desc: 'High risk, high exploration rewards.' },
+    { name: 'ZEUS-04', title: 'Sky World', price: 1000000, tone: 'zeus', desc: 'Floating cities above the clouds.' }
+  ];
+  return `<div class="screen-stack">${panelTitle('EXPLORE NEW WORLDS', t('galaxy'), `<span class="status-tag">NOVA SECTOR</span>`)}<section class="galaxy-banner"><div class="galaxy-nebula"></div><div class="galaxy-banner-copy"><span class="gold-kicker">SECTOR 01 · ANCIENT SIGNAL</span><h2>Explore beyond<br/><span>the horizon.</span></h2><p>Build a base, find ancient signals, and unlock new worlds.</p><div class="explore-stat"><span>EXPLORATION</span><b>65%</b><div class="progress-track"><i style="width:65%"></i></div></div></div><div class="galaxy-orb"><img src="/assets/arm-logo.jpg" alt="ARM"/></div></section><div class="world-list">${worlds.map((world) => { const owned = ownedWorlds.has(world.name); return `<article class="world-row ${world.tone}"><div class="world-planet"><span>${world.tone === 'nova' ? '✦' : world.tone === 'terra' ? '❄' : world.tone === 'pyro' ? '♨' : '☁'}</span></div><div class="world-info"><span class="world-code">${world.name}</span><h3>${world.title}</h3><p>${world.desc}</p></div><div class="world-action">${owned ? `<span class="owned-chip">✓ ${esc(t('owned'))}</span>` : `<strong>✦ ${fmt(world.price)} GP</strong><button class="small-gold-button" data-action="buy-world" data-world="${world.name}" ${worldPurchaseBusy ? 'disabled' : ''}>${esc(worldPurchaseBusy ? t('loading') : t('buy'))}</button>`}</div></article>`; }).join('')}</div><div class="notice-card"><span>ⓘ</span><p>${esc(t('worldNotice'))} ${esc(isDemo ? t('demoGameNotice') : 'Purchases are checked and recorded by the server. Every world can be purchased only once.')}</p></div></div>`;
 }
 function renderShop() {
   const items = [{ category: 'boosts', title: 'Energy Core', desc: '+20 energy capacity', price: 500, icon: '⚡' }, { category: 'ships', title: 'Scout Ship', desc: 'A fast first exploration ship', price: 3000, icon: '➤' }, { category: 'boosts', title: 'XP Amplifier', desc: 'Progression upgrade preview', price: 1500, icon: '✦' }, { category: 'worlds', title: 'NOVA Base Skin', desc: 'A premium gold base design', price: 800, icon: '⌂' }, { category: 'ships', title: 'Armored Cruiser', desc: 'Advanced galaxy ship', price: 15000, icon: '⬡' }, { category: 'boosts', title: 'Explorer Badge', desc: 'Profile flair', price: 750, icon: '♜' }];
@@ -320,6 +327,23 @@ async function refreshLeaderboard() {
 function updateDemoPlayer(updater) {
   model.player = { ...model.player, ...updater(model.player) };
   persist(); render();
+}
+async function buyWorld(worldId) {
+  if (worldPurchaseBusy) return;
+  if (isDemo) return toast('Open the Mini App inside Telegram to purchase worlds.', 'error');
+  if (!worldId) return toast('Choose a valid world.', 'error');
+  worldPurchaseBusy = true;
+  render();
+  try {
+    const data = await requestApi('buyWorld', { worldId });
+    if (data.player) applyServerPlayer(data.player);
+    toast(model.language === 'hy' ? `${worldId} մոլորակը գնվեց։` : model.language === 'ru' ? `Мир ${worldId} куплен.` : `${worldId} purchased successfully.`, 'success');
+  } catch (error) {
+    toast(error.message, 'error');
+  } finally {
+    worldPurchaseBusy = false;
+    render();
+  }
 }
 function playTapEffect(button) {
   button?.classList.remove('tap-hit');
@@ -525,7 +549,7 @@ root.addEventListener('click', async (event) => {
   if (action === 'mini-game-result-close') { miniGameResult = null; render(); return; }
   if (action === 'upgrade-miner') return previewOnly('Miner upgrades will be connected to the server economy in the next development step.');
   if (action === 'buy-item') return previewOnly('Shop purchases will be validated on the server before any game points are spent.');
-  if (action === 'buy-world') return previewOnly('World purchases will be validated and saved by the server in the next development step.');
+  if (action === 'buy-world') return buyWorld(actionBtn.dataset.world);
   if (action === 'copy-invite') {
     const botName = (env.VITE_TELEGRAM_BOT_USERNAME || '').replace(/^@/, '');
     const link = botName && model.player.telegramId ? `https://t.me/${botName}?start=${model.player.telegramId}` : '';

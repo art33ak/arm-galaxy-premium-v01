@@ -11,6 +11,13 @@ const MINI_GAME_SESSION_TTL_MS = 30_000;
 const MINI_GAME_WHEEL_MIN_MS = 2_800;
 const MINI_GAME_SCRATCH_MIN_MS = 1_200;
 
+// Server-owned catalog: never accept prices or product metadata from the client.
+const WORLD_CATALOG = Object.freeze({
+  "TERRA-02": Object.freeze({ title: "Frozen World", priceGP: 100_000 }),
+  "PYRO-03": Object.freeze({ title: "Lava World", priceGP: 500_000 }),
+  "ZEUS-04": Object.freeze({ title: "Sky World", priceGP: 1_000_000 })
+});
+
 function json(res, status, body) {
   res.setHeader("Cache-Control", "no-store");
   res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -91,6 +98,7 @@ function freshPlayer(tgUser) {
     dailyClaimDate: "",
     dailyStreak: 0,
     stakedArm: 0,
+    ownedWorlds: ["NOVA-01"],
     miniGamesDate: "",
     miniGamesPlayedToday: 0,
     miniGamesRewardedToday: 0,
@@ -114,7 +122,9 @@ function normalizePlayer(data, tgUser) {
   const base = freshPlayer(tgUser);
   const merged = { ...base, ...(data || {}) };
   const energy = energyState(merged);
-  return { ...merged, ...energy, level: Math.max(1, Number(merged.level || 1)), gamePoints: Math.max(0, Number(merged.gamePoints || 0)), xp: Math.max(0, Number(merged.xp || 0)) };
+  const savedWorlds = Array.isArray(merged.ownedWorlds) ? merged.ownedWorlds : [];
+  const ownedWorlds = [...new Set(["NOVA-01", ...savedWorlds.filter((id) => id === "NOVA-01" || Object.hasOwn(WORLD_CATALOG, id))])];
+  return { ...merged, ...energy, ownedWorlds, level: Math.max(1, Number(merged.level || 1)), gamePoints: Math.max(0, Number(merged.gamePoints || 0)), xp: Math.max(0, Number(merged.xp || 0)) };
 }
 
 async function getContext(req, body) {
@@ -145,6 +155,7 @@ function publicPlayer(player) {
     dailyClaimDate: player.dailyClaimDate || "",
     dailyStreak: player.dailyStreak || 0,
     stakedArm: player.stakedArm || 0,
+    ownedWorlds: Array.isArray(player.ownedWorlds) ? player.ownedWorlds : ["NOVA-01"],
     miniGamesDate: isMiniGameToday ? player.miniGamesDate : "",
     miniGamesPlayedToday: isMiniGameToday ? Math.max(0, Number(player.miniGamesPlayedToday || 0)) : 0,
     miniGamesRewardedToday: isMiniGameToday ? Math.max(0, Number(player.miniGamesRewardedToday || 0)) : 0
@@ -342,6 +353,52 @@ export default async function handler(req, res) {
         return next;
       });
       return json(res, 200, { ok: true, message: "Daily reward claimed.", player: publicPlayer(updated) });
+    }
+
+    if (req.method === "POST" && action === "buyWorld") {
+      const worldId = String(body.worldId || "").trim();
+      const world = Object.hasOwn(WORLD_CATALOG, worldId) ? WORLD_CATALOG[worldId] : null;
+      if (!world) return json(res, 400, { ok: false, error: "WORLD_INVALID" });
+
+      const purchaseId = crypto.randomUUID();
+      const purchaseRef = firestore.collection("purchaseHistory").doc(purchaseId);
+      const createdAtMs = Date.now();
+      const updated = await firestore.runTransaction(async (tx) => {
+        const playerSnap = await tx.get(playerRef);
+        if (!playerSnap.exists) throw new Error("PLAYER_NOT_FOUND");
+        const current = normalizePlayer(playerSnap.data(), tgUser);
+        if (current.ownedWorlds.includes(worldId)) throw new Error("WORLD_ALREADY_OWNED");
+        if (current.gamePoints < world.priceGP) throw new Error("INSUFFICIENT_GP");
+
+        const next = {
+          ...current,
+          gamePoints: current.gamePoints - world.priceGP,
+          ownedWorlds: [...current.ownedWorlds, worldId],
+          updatedAt: FieldValue.serverTimestamp()
+        };
+
+        // The balance debit, ownership grant, and audit record commit atomically.
+        tx.set(playerRef, next, { merge: true });
+        tx.create(purchaseRef, {
+          telegramId: String(tgUser.id),
+          purchaseId,
+          itemType: "world",
+          itemId: worldId,
+          itemName: world.title,
+          amountGP: world.priceGP,
+          status: "completed",
+          createdAt: FieldValue.serverTimestamp(),
+          createdAtMs
+        });
+        return next;
+      });
+
+      return json(res, 200, {
+        ok: true,
+        message: `${worldId} purchased successfully.`,
+        purchase: { id: purchaseId, worldId, amountGP: world.priceGP, status: "completed" },
+        player: publicPlayer(updated)
+      });
     }
 
     if (req.method === "POST" && action === "miniGamePlay") {
@@ -594,6 +651,9 @@ export default async function handler(req, res) {
       TASK_ALREADY_SUBMITTED: [409, "You have already submitted this task."],
       CLAIM_NOT_PENDING: [409, "This claim has already been reviewed."],
       PLAYER_NOT_FOUND: [404, "Player not found."],
+      WORLD_INVALID: [400, "Ընտրված մոլորակը գոյություն չունի։"],
+      WORLD_ALREADY_OWNED: [409, "Այս մոլորակն արդեն պատկանում է քեզ։"],
+      INSUFFICIENT_GP: [409, "Գնումի համար բավարար GP չունես։"],
       MINIGAME_DAILY_LIMIT: [429, "Այսօրվա մինի խաղերի սահմանաչափն ավարտվել է։ Վաղը նորից փորձիր։"],
       MINIGAME_REWARD_CAP: [429, "Այսօրվա մինի խաղերի պարգևների սահմանաչափն արդեն լրացել է։"],
       MINIGAME_COOLDOWN: [429, "Հաջորդ խաղից առաջ մի քանի վայրկյան սպասիր։"],
