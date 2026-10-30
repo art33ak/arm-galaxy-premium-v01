@@ -8,6 +8,8 @@ const MINI_GAME_DAILY_LIMIT = 10;
 const MINI_GAME_DAILY_REWARD_CAP = 250;
 const MINI_GAME_COOLDOWN_MS = 12_000;
 const MINI_GAME_SESSION_TTL_MS = 30_000;
+const MINI_GAME_WHEEL_MIN_MS = 2_800;
+const MINI_GAME_SCRATCH_MIN_MS = 1_200;
 
 function json(res, status, body) {
   res.setHeader("Cache-Control", "no-store");
@@ -188,6 +190,12 @@ function shuffled(items) {
 }
 
 function makeMiniGameChallenge(gameId) {
+  if (gameId === "wheel") {
+    return { kind: "wheel", title: "Lucky Wheel", reward: weightedReward("wheel"), durationMs: 3_200, minPlayMs: MINI_GAME_WHEEL_MIN_MS };
+  }
+  if (gameId === "scratch") {
+    return { kind: "scratch", title: "Scratch Card", reward: weightedReward("scratch"), durationMs: 1_500, minPlayMs: MINI_GAME_SCRATCH_MIN_MS };
+  }
   if (gameId === "memory") {
     const pool = ["✦", "◈", "⌁", "☼", "⬡", "◇"];
     const sequence = Array.from({ length: 4 }, () => pool[crypto.randomInt(0, pool.length)]);
@@ -337,34 +345,12 @@ export default async function handler(req, res) {
     }
 
     if (req.method === "POST" && action === "miniGamePlay") {
-      const gameId = String(body.gameId || "");
-      if (!["wheel", "scratch"].includes(gameId)) return json(res, 400, { ok: false, error: "MINIGAME_INVALID" });
-      const rolledReward = weightedReward(gameId);
-      const now = Date.now();
-      const historyRef = firestore.collection("miniGameHistory").doc(crypto.randomUUID());
-      const result = await firestore.runTransaction(async (tx) => {
-        const snap = await tx.get(playerRef);
-        const current = normalizePlayer(snap.data(), tgUser);
-        const updated = withMiniGamePlay(current, dateKey, now, rolledReward);
-        tx.set(playerRef, updated.player, { merge: true });
-        tx.create(historyRef, {
-          telegramId: String(tgUser.id), gameId, reward: updated.reward,
-          outcome: updated.reward > 0 ? "win" : "no_reward",
-          createdAt: FieldValue.serverTimestamp(), createdAtMs: now
-        });
-        return updated;
-      });
-      return json(res, 200, {
-        ok: true, gameId, reward: result.reward,
-        outcome: result.reward > 0 ? "win" : "no_reward",
-        message: result.reward > 0 ? `Շնորհավորում ենք․ +${result.reward} GP` : "Այս անգամ պարգև չընկավ։ Նորից փորձիր ավելի ուշ։",
-        player: publicPlayer(result.player)
-      });
+      return json(res, 410, { ok: false, error: "MINIGAME_SESSION_REQUIRED" });
     }
 
     if (req.method === "POST" && action === "miniGameStart") {
       const gameId = String(body.gameId || "");
-      if (!["memory", "match", "signal", "rocket"].includes(gameId)) return json(res, 400, { ok: false, error: "MINIGAME_INVALID" });
+      if (!["wheel", "scratch", "memory", "match", "signal", "rocket"].includes(gameId)) return json(res, 400, { ok: false, error: "MINIGAME_INVALID" });
       const challenge = makeMiniGameChallenge(gameId);
       const now = Date.now();
       const sessionId = crypto.randomUUID();
@@ -388,6 +374,7 @@ export default async function handler(req, res) {
           correctChoice: challenge.correctChoice ?? null,
           crashAtElapsedMs: challenge.crashAtElapsedMs ?? null,
           reward: challenge.reward || 0,
+          minPlayMs: challenge.minPlayMs || 0,
           status: "active", createdAt: FieldValue.serverTimestamp(),
           createdAtMs: now, expiresAtMs: now + MINI_GAME_SESSION_TTL_MS
         });
@@ -398,8 +385,9 @@ export default async function handler(req, res) {
         prompt: challenge.prompt || "", problem: challenge.problem || "",
         sequence: challenge.sequence || [], options: challenge.options || [],
         minStopMs: gameId === "rocket" ? 900 : 0,
-        expiresInMs: MINI_GAME_SESSION_TTL_MS,
-        reward: challenge.reward || 0
+        durationMs: challenge.durationMs || 0,
+        minPlayMs: challenge.minPlayMs || 0,
+        expiresInMs: MINI_GAME_SESSION_TTL_MS
       };
       return json(res, 200, { ok: true, challenge: publicChallenge, player: publicPlayer(result) });
     }
@@ -422,7 +410,13 @@ export default async function handler(req, res) {
         const current = normalizePlayer(playerSnap.data(), tgUser);
         let won = false;
         let reward = 0;
-        if (session.gameId === "rocket") {
+        if (session.gameId === "wheel" || session.gameId === "scratch") {
+          const elapsed = now - Number(session.createdAtMs || now);
+          const minimum = Number(session.minPlayMs || (session.gameId === "wheel" ? MINI_GAME_WHEEL_MIN_MS : MINI_GAME_SCRATCH_MIN_MS));
+          if (elapsed < minimum) throw new Error("MINIGAME_TOO_FAST");
+          reward = Math.max(0, Number(session.reward || 0));
+          won = reward > 0;
+        } else if (session.gameId === "rocket") {
           const elapsed = now - Number(session.createdAtMs || now);
           if (elapsed < 900) throw new Error("MINIGAME_ROCKET_TOO_FAST");
           won = elapsed < Number(session.crashAtElapsedMs || 0);
@@ -608,6 +602,7 @@ export default async function handler(req, res) {
       MINIGAME_ALREADY_USED: [409, "Այս խաղային սեսիան արդեն օգտագործվել է։"],
       MINIGAME_SESSION_EXPIRED: [410, "Խաղի ժամանակը լրացել է։ Նորից սկսիր։"],
       MINIGAME_CHOICE_INVALID: [400, "Ընտրությունը վավեր չէ։"],
+      MINIGAME_TOO_FAST: [409, "Մի փոքր սպասիր, մինչև խաղն ավարտվի։"],
       MINIGAME_ROCKET_TOO_FAST: [409, "Հրթիռը դեռ չի հասցրել թռիչքի անվտանգ արագությանը։ Մի փոքր սպասիր։"]
     };
     if (known[message]) return json(res, known[message][0], { ok: false, error: known[message][1] });
