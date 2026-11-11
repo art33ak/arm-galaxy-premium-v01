@@ -1,3 +1,10 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+*.local
+
 # Firebase service-account secrets
 *firebase-adminsdk*.json
 arm-galaxy-premium-*.json
