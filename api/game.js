@@ -364,6 +364,9 @@ export default async function handler(req, res) {
     if (message.includes("Telegram authentication") || message.includes("Telegram session") || message.includes("Open ARM Galaxy") || message.includes("Telegram user")) return json(res, 401, { ok: false, error: message });
     if (message.includes("Admin access only")) return json(res, 403, { ok: false, error: message });
     console.error("ARM Galaxy API error:", error);
-    return json(res, 500, { ok: false, error: message });
+return json(res, 500, {
+  ok: false,
+  error: "An unexpected server error occurred."
+});
   }
 }
