@@ -44,7 +44,7 @@ function verifyTelegramInitData(initData) {
   }
 
   const authDate = Number(params.get("auth_date") || 0);
-  if (!authDate || Date.now() / 1000 - authDate > 24 * 60 * 60 || authDate > Date.now() / 1000 + 60) {
+  if (!authDate || Date.now() / 1000 - authDate > 5 * 60 || authDate > Date.now() / 1000 + 60) {
     throw new Error("Telegram session expired. Close and reopen the Mini App.");
   }
   let user;
