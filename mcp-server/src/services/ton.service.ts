@@ -54,3 +54,15 @@ export async function getPoolInfo(poolAddress?: string) {
   const data = await getJson(`${config.stonfiBaseUrl}/v1/pools/${encodeURIComponent(address)}`);
   return { configured: true, poolAddress: address, data, source: "STON.fi API" };
 }
+
+export function getArmDisplayPrice() {
+  return {
+    symbol: "ARM",
+    priceUsd: config.armDisplayPriceUsd,
+    priceType: "target_reference",
+    marketPriceConfirmed: false,
+    currency: "USD",
+    source: "ARM Galaxy configuration",
+    note: "Target display price only. Not a verified market price or guaranteed trading price."
+  };
+}

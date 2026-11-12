@@ -21,6 +21,7 @@ export const config = {
     .split(",").map(v => v.trim()).filter(Boolean),
   tonNetwork: process.env.TON_NETWORK ?? "mainnet",
   armJettonMasterAddress: process.env.ARM_JETTON_MASTER_ADDRESS ?? "",
+  armDisplayPriceUsd: Number(process.env.ARM_DISPLAY_PRICE_USD ?? "0.01"),
   tonapiBaseUrl: process.env.TONAPI_BASE_URL ?? "https://tonapi.io",
   tonapiApiKey: process.env.TONAPI_API_KEY ?? "",
   stonfiBaseUrl: process.env.STONFI_BASE_URL ?? "https://api.ston.fi",

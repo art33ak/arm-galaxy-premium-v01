@@ -12,6 +12,7 @@ function same(a: string, b: string) {
   return x.length === y.length && timingSafeEqual(x, y);
 }
 function makeServer(adminActor?: string) {
+  console.log("[DEBUG] makeServer START", { adminActor });
   const server = new McpServer({ name: "arm-mcp-firebase", version: "1.1.0" });
 
   server.tool("get_user_balance", "Read player's non-withdrawable gamePoints (not on-chain ARM).",
@@ -36,6 +37,12 @@ function makeServer(adminActor?: string) {
     {},
     async () => ({
       content: [{ type: "text", text: JSON.stringify(await arm.getGameStatistics()) }]
+    }));
+
+  server.tool("get_arm_price", "Read ARM Galaxy target display price in USD. Not a verified market price.",
+    {},
+    async () => ({
+      content: [{ type: "text", text: JSON.stringify(ton.getArmDisplayPrice()) }]
     }));
 
   server.tool("get_total_arm_supply", "Read ARM Jetton supply from TON API.",
@@ -74,13 +81,30 @@ function makeServer(adminActor?: string) {
       }));
 
     server.tool("admin_ban_user", "ADMIN ONLY: set player's isBlocked flag to true.",
-      { telegram_id: z.string().regex(/^\d+$/), reason: z.string().min(3).max(300) },
+      {
+        telegram_id: z.string().regex(/^\d+$/),
+        reason: z.string().min(3).max(300)
+      },
       async ({ telegram_id, reason }) => ({
         content: [{
           type: "text",
           text: JSON.stringify(await arm.banUser({ telegramId: telegram_id, reason, actor: adminActor }))
         }]
       }));
+
+    console.log("[DEBUG] BEFORE admin_get_logs");
+server.tool("admin_get_logs", "ADMIN ONLY: read recent ARM Galaxy admin action logs.",
+      {
+        limit: z.number().int().min(1).max(100).default(20)
+      },
+      async ({ limit }) => ({
+        content: [{
+          type: "text",
+          text: JSON.stringify(await arm.getAdminLogs(limit))
+        }]
+            }));
+console.log("[DEBUG] AFTER admin_get_logs");
+    console.log("[MCP DEBUG] registered tools:", Object.keys((server as any)._registeredTools));
   }
   return server;
 }

@@ -25,7 +25,30 @@ function safePlayer(doc: FirebaseFirestore.QueryDocumentSnapshot | FirebaseFires
 function validateTelegramId(id: string) {
   if (!/^\d+$/.test(id)) throw new Error("Invalid Telegram ID");
 }
+export async function getAdminLogs(limit = 20) {
+  const safeLimit = Math.max(1, Math.min(100, Math.floor(limit)));
 
+  const snap = await adminLogs
+    .orderBy("createdAt", "desc")
+    .limit(safeLimit)
+    .get();
+
+  return snap.docs.map(doc => {
+    const d = doc.data();
+
+    return {
+      id: doc.id,
+      adminTelegramId: d.adminTelegramId ?? null,
+      action: d.action ?? null,
+      targetTelegramId: d.targetTelegramId ?? null,
+      reason: d.reason ?? null,
+      before: d.before ?? null,
+      after: d.after ?? null,
+      amount: d.amount ?? null,
+      createdAt: d.createdAt?.toDate?.().toISOString() ?? null
+    };
+  });
+}
 export async function getUser(telegramId: string) {
   validateTelegramId(telegramId);
   const snap = await players.doc(telegramId).get();
