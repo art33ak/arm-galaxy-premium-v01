@@ -1,5 +1,5 @@
 import express from "express";
-import helmet from "helmet";
+import * as helmet from "helmet";
 import { z } from "zod";
 import { config } from "../config.js";
 import { healthCheck } from "../db.js";
@@ -11,7 +11,7 @@ import * as ton from "../services/ton.service.js";
 export const app = express();
 
 app.disable("x-powered-by");
-app.use(helmet());
+app.use(helmet.default());
 
 app.get("/health", async (_req, res) => {
   try {
