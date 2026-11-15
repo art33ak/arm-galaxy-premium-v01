@@ -1,5 +1,5 @@
 import express from "express";
-import * as helmet from "helmet";
+import { xContentTypeOptions, referrerPolicy, frameguard } from "helmet";
 import { z } from "zod";
 import { config } from "../config.js";
 import { healthCheck } from "../db.js";
@@ -11,7 +11,9 @@ import * as ton from "../services/ton.service.js";
 export const app = express();
 
 app.disable("x-powered-by");
-app.use(helmet.default());
+app.use(xContentTypeOptions());
+app.use(referrerPolicy());
+app.use(frameguard());
 
 app.get("/health", async (_req, res) => {
   try {
