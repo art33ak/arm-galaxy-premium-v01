@@ -12,7 +12,6 @@ function same(a: string, b: string) {
   return x.length === y.length && timingSafeEqual(x, y);
 }
 function makeServer(adminActor?: string) {
-  console.log("[DEBUG] makeServer START", { adminActor });
   const server = new McpServer({ name: "arm-mcp-firebase", version: "1.1.0" });
 
   server.tool("get_user_balance", "Read player's non-withdrawable gamePoints (not on-chain ARM).",
@@ -92,7 +91,6 @@ function makeServer(adminActor?: string) {
         }]
       }));
 
-    console.log("[DEBUG] BEFORE admin_get_logs");
 server.tool("admin_get_logs", "ADMIN ONLY: read recent ARM Galaxy admin action logs.",
       {
         limit: z.number().int().min(1).max(100).default(20)
@@ -103,8 +101,6 @@ server.tool("admin_get_logs", "ADMIN ONLY: read recent ARM Galaxy admin action l
           text: JSON.stringify(await arm.getAdminLogs(limit))
         }]
             }));
-console.log("[DEBUG] AFTER admin_get_logs");
-    console.log("[MCP DEBUG] registered tools:", Object.keys((server as any)._registeredTools));
   }
   return server;
 }

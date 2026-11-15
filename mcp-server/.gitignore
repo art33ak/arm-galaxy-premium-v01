@@ -7,3 +7,9 @@ dist/
 *.save
 service-account*.json
 *firebase-adminsdk*.json
+test-idempotency.mjs
+
+# Local backup files
+*.backup
+*.before-*
+*.bak

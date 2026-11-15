@@ -120,8 +120,18 @@ export async function getGameStatistics() {
  */
 export async function addGameReward(input: {
   telegramId: string; amount: number; reason: string; idempotencyKey: string; actor: string;
+  dryRun?: boolean;
 }) {
   validateTelegramId(input.telegramId);
+
+  if (!input.actor || !/^\d+$/.test(input.actor)) {
+    throw new Error("Invalid admin actor");
+  }
+
+  if (!input.reason || input.reason.trim().length < 3 || input.reason.length > 300) {
+    throw new Error("Reason must be 3-300 characters");
+  }
+
   if (!Number.isSafeInteger(input.amount) || input.amount <= 0 || input.amount > 1_000_000_000) {
     throw new Error("Reward amount must be a positive safe integer up to 1,000,000,000");
   }
@@ -134,11 +144,44 @@ export async function addGameReward(input: {
 
   return db.runTransaction(async tx => {
     const [playerSnap, priorLog] = await Promise.all([tx.get(playerRef), tx.get(logRef)]);
-    if (priorLog.exists) return { applied: false, duplicate: true, logId };
+    if (priorLog.exists) {
+      const prior = priorLog.data();
+
+      const sameRequest =
+        prior?.action === "mcp_add_game_reward" &&
+        prior?.targetTelegramId === input.telegramId &&
+        prior?.amount === input.amount &&
+        prior?.reason === input.reason &&
+        prior?.adminTelegramId === input.actor;
+
+      if (!sameRequest) {
+        throw new Error("Idempotency key already used with different reward details");
+      }
+
+      return { applied: false, duplicate: true, logId };
+    }
+
     if (!playerSnap.exists) throw new Error("Player not found");
     const before = Number(playerSnap.get("gamePoints") ?? 0);
     if (playerSnap.get("isBlocked") === true) throw new Error("Player is blocked");
+    if (!Number.isSafeInteger(before) || before < 0 ||
+        !Number.isSafeInteger(before + input.amount)) {
+      throw new Error("Invalid or unsafe gamePoints balance");
+    }
+
     const after = before + input.amount;
+
+    if (input.dryRun === true) {
+      return {
+        applied: false,
+        dryRun: true,
+        telegramId: input.telegramId,
+        before,
+        after,
+        amount: input.amount
+      };
+    }
+
     tx.update(playerRef, {
       gamePoints: FieldValue.increment(input.amount),
       updatedAt: Timestamp.now()
@@ -160,11 +203,29 @@ export async function addGameReward(input: {
 
 export async function banUser(input: { telegramId: string; reason: string; actor: string }) {
   validateTelegramId(input.telegramId);
+
+  if (!input.actor || !/^\d+$/.test(input.actor)) {
+    throw new Error("Invalid admin actor");
+  }
+
+  if (!input.reason || input.reason.trim().length < 3 || input.reason.length > 300) {
+    throw new Error("Reason must be 3-300 characters");
+  }
   const playerRef = players.doc(input.telegramId);
   const logRef = adminLogs.doc();
   return db.runTransaction(async tx => {
     const snap = await tx.get(playerRef);
     if (!snap.exists) throw new Error("Player not found");
+
+    if (snap.get("isBlocked") === true) {
+      return {
+        success: false,
+        alreadyBlocked: true,
+        telegramId: input.telegramId,
+        isBlocked: true
+      };
+    }
+
     const before = { isBlocked: Boolean(snap.get("isBlocked")) };
     tx.update(playerRef, { isBlocked: true, updatedAt: Timestamp.now() });
     tx.create(logRef, {

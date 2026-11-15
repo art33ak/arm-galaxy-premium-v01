@@ -9,3 +9,11 @@ dist/
 *firebase-adminsdk*.json
 arm-galaxy-premium-*.json
 service-account*.json
+*.before-*
+*.backup
+*.bak
+*.save
+
+# Firebase emulator logs
+firestore-debug.log
+*-debug.log
