@@ -77,7 +77,10 @@ export const config = {
   nodeEnv,
   port,
   host: process.env.HOST?.trim() || "127.0.0.1",
-  firebaseServiceAccountPath: path.resolve(required("FIREBASE_SERVICE_ACCOUNT_PATH")),
+  firebaseServiceAccountPath: process.env.FIREBASE_SERVICE_ACCOUNT_PATH?.trim()
+  ? path.resolve(process.env.FIREBASE_SERVICE_ACCOUNT_PATH.trim())
+  : "",
+firebaseServiceAccountJson: process.env.FIREBASE_SERVICE_ACCOUNT_JSON?.trim() || "",
   firebaseProjectId: required("FIREBASE_PROJECT_ID"),
   apiBearerToken,
   telegramBotToken,
