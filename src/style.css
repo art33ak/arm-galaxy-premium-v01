@@ -421,3 +421,25 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 @media(max-width:1150px){.admin-player-form{grid-template-columns:minmax(130px,1.4fr) repeat(3,minmax(65px,.6fr)) auto auto}.admin-player-form .small-gold-button{grid-column:1/-1;justify-self:end}}
 @media(max-width:900px){.whitepaper-button span{display:none}.whitepaper-button{width:34px;height:34px;padding:0;font-size:15px}.sidebar-doc-link{display:none}.admin-player-form{grid-template-columns:minmax(0,1fr) repeat(3,minmax(62px,.5fr));}.admin-check-label{padding:4px 0}.admin-player-form .small-gold-button{grid-column:1/-1;justify-self:stretch}}
 @media(max-width:620px){.admin-player-form{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.admin-player-identity{grid-column:1/-1}.admin-player-form .admin-check-label{grid-column:span 1}.admin-player-form .small-gold-button{grid-column:1/-1}.admin-locked-card h2{font-size:17px}.admin-lock-checklist{font-size:10px}}
+
+/* ARM target price card */
+.arm-price-card {
+  margin-top: 14px;
+  border: 1px solid rgba(232, 183, 91, 0.35);
+  background: linear-gradient(135deg, rgba(232, 183, 91, 0.12), rgba(20, 25, 42, 0.92));
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+}
+
+.arm-price-card strong {
+  color: #e8b75b;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.arm-price-card small {
+  display: block;
+  margin-top: 7px;
+  line-height: 1.5;
+  opacity: 0.78;
+}
